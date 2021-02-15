@@ -19,6 +19,7 @@ FilmID INT primary key,
 Tittel VARCHAR(30), 
 Produksjonsår INT, 
 RegissørID INT,
+CONSTRAINT FK
 FOREIGN KEY (RegissørID) references regissør(RegissørID)
 );
 
@@ -32,10 +33,10 @@ FOREIGN KEY (FilmId) REFERENCES film(FilmId)
 );
 
 create table sjangerforfilm(
-FilmID INT, 
-SjangerID INT,
-PRIMARY KEY (FilmID, SjangerID),
-FOREIGN KEY (FilmID) references film(FilmID)
+SjangerID INT, 
+FilmID INT,
+CONSTRAINT PK PRIMARY KEY (FilmID, SjangerID),
+CONSTRAINT FKFIlm FOREIGN KEY (FilmID) references film(FilmID)
 		ON DELETE CASCADE  ON UPDATE CASCADE, 
-FOREIGN KEY (SjangerID) references sjanger(SjangerID)
+CONSTRAINT FKSjanger FOREIGN KEY (SjangerID) references sjanger(SjangerID)
 );
