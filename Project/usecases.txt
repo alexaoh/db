@@ -2,7 +2,7 @@
 
 -- Make user.
 insert into User
-values ("olanordmann", "Ola", "Nordmann", "ola@nordmann.no", 12345, "student");
+values ("olanordmann", "Ola", "Nordmann", "ola@nordmann.no", "12345", "student");
 
 -- Check credentials.
 select UserID, Password
@@ -11,6 +11,14 @@ where Email = "ola@nordmann.no";
 
 -- Show result from making user.
 select * from User;
+
+
+-- Add data to statistics.
+insert into ActiveOnDate
+values("olanordmann", "2020-03-11");
+
+-- Show statistics result.
+select * from ActiveOnDate;
 
 -- Usecase 2
 
@@ -41,6 +49,17 @@ select * from Folder;
 select * from Post;
 select * from Thread;
 
+-- Add data for statistics.
+insert into ActiveOnDate
+values("olanordmann", "2020-03-12"); -- Change date to 12.03.2020 to check functionality for that as well. 
+
+insert into ViewedBy
+values("olanordmann", 1);
+
+-- Check tables.
+select * from ActiveOnDate;
+select * from ViewedBy;
+
 -- Usecase 3
 
 -- Instructor "roger" replies to post 1 from usecase 2.
@@ -53,6 +72,18 @@ values (2, NULL, 1);
 -- Show results.
 select * from Post;
 select * from Reply;
+
+-- Add data for statistics.
+insert into ActiveOnDate
+values("roger", "2020-03-12");  
+
+insert into ViewedBy
+values("roger", 1);
+values("roger", 2);
+
+-- Check tables.
+select * from ActiveOnDate;
+select * from ViewedBy;
 
 -- Usecase 4
 
@@ -70,5 +101,11 @@ select *
 from Post
 where Text LIKE "%WAL%";
 
+-- Add data for statistics.
+-- I assume that the student is searching for this on the same day as earlier, hence nothing is added. 
+
 -- Usecase 5: Statistics.
- 
+select UserID, COUNT(ViewedBy.PostID) as Read, COUNT(PostID) as Created 
+from (ViewedBy right outer join User using (UserID)) left outer join Post using (UserID) 
+group by UserID;
+

@@ -1,4 +1,5 @@
-CREATE SCHEMA `DB1Project`;
+DROP DATABASE DB1Project;
+CREATE SCHEMA DB1Project;
 
 USE DB1Project;
 
