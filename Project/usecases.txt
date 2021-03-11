@@ -1,0 +1,74 @@
+-- Usecase 1
+
+-- Make user.
+insert into User
+values ("olanordmann", "Ola", "Nordmann", "ola@nordmann.no", 12345, "student");
+
+-- Check credentials.
+select UserID, Password
+from User
+where Email = "ola@nordmann.no";
+
+-- Show result from making user.
+select * from User;
+
+-- Usecase 2
+
+-- Make one course.
+insert into Course
+values ("TDT4145", "Databases", "spring", 1);
+
+-- Make one instructor.
+insert into User
+values ("roger", "Roger", "Midt", "roger@midt.no", "admin", "instructor");
+
+-- Make folder.
+insert into Folder
+values (1, "Exam", "TDT4145", NULL, "roger");
+
+-- Create post.
+insert into Post
+values (1, "This is my first post, in usecase 2. Yes sir!", "thread", "olanordmann");
+
+-- Add post to Thread as well.
+insert into Thread
+values (1, "First post ever!", "red", "question", 1); 
+
+-- Show results. 
+select * from Course;
+select * from User;
+select * from Folder;
+select * from Post;
+select * from Thread;
+
+-- Usecase 3
+
+-- Instructor "roger" replies to post 1 from usecase 2.
+insert into Post
+values (2, "Reply to first post", "reply", "roger"); 
+
+insert into Reply
+values (2, NULL, 1);
+
+-- Show results.
+select * from Post;
+select * from Reply;
+
+-- Usecase 4
+
+-- Search for keyword in Post and return list (of IDs).
+select * 
+from Post
+where Text LIKE "%WAL%";
+
+-- Construct new post with the given keyword. 
+insert into Post
+values (3, "Post to check keyword. The keyword we are looking for is inWALside this word", "thread", "olanordmann");
+
+-- Query again.
+select *
+from Post
+where Text LIKE "%WAL%";
+
+-- Usecase 5: Statistics.
+ 

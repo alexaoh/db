@@ -8,7 +8,6 @@ CREATE TABLE User(
     Sname VARCHAR(30),
     Email VARCHAR(50), 
     Password VARCHAR(50), 
-    ActiveToday BOOL, 
     Type VARCHAR(10), 
     CONSTRAINT User_PK PRIMARY KEY (UserID)
 );
@@ -26,13 +25,13 @@ CREATE TABLE ActiveOnDate(
 CREATE TABLE Course(
     CourseID VARCHAR(30) NOT NULL, 
     Name VARCHAR(30), 
-    Term INT,
+    Term VARCHAR(6),
     AllowAnonymous BOOL, 
     CONSTRAINT Course_PK PRIMARY KEY (CourseID)
 );
 
 CREATE TABLE Folder(
-    FolderID INT NOT NULL AUTO_INCREMENT, 
+    FolderID INT NOT NULL, 
     Name VARCHAR(30), 
     CourseID VARCHAR(30), 
     SuperFolder INT, 
@@ -56,7 +55,7 @@ CREATE TABLE Post(
     PostID INT NOT NULL,
     Text VARCHAR(500),
     Type VARCHAR(8) NOT NULL,
-    UserID VARCHAR(30) NOT NULL, 
+    UserID VARCHAR(30) NOT NULL,
     CONSTRAINT Post_PK PRIMARY KEY (PostID), 
     CONSTRAINT Post_FK_User FOREIGN KEY (UserID) 
         REFERENCES User(UserID)
@@ -68,6 +67,7 @@ CREATE TABLE Thread(
     ThreadID INT NOT NULL, 
     Summary VARCHAR(100), 
     ColorCode VARCHAR(10), 
+    Tag VARCHAR(20),  
     FolderID INT NOT NULL, 
     CONSTRAINT Thread_PK PRIMARY KEY (ThreadID),
     CONSTRAINT Thread_FK_Post FOREIGN KEY (ThreadID)
@@ -77,19 +77,6 @@ CREATE TABLE Thread(
     CONSTRAINT Thread_FK_Folder FOREIGN KEY (FolderID) 
         REFERENCES Folder(FolderID)
             ON DELETE CASCADE 
-            ON UPDATE CASCADE
-);
-
--- Multivalued attribute of Post modelled as a separate relation. 
--- Assumed that each tag can be used on several different posts. 
--- Hence, (PostID, Tag) is PK. 
-CREATE TABLE Tag(
-    ThreadID INT NOT NULL, 
-    Tag VARCHAR(30) NOT NULL,
-    CONSTRAINT Tag_PK PRIMARY KEY (ThreadID, Tag),
-    CONSTRAINT Tag_FK FOREIGN KEY (ThreadID) 
-        REFERENCES Thread(ThreadID)
-            ON DELETE CASCADE
             ON UPDATE CASCADE
 );
 
