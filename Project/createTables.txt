@@ -1,0 +1,169 @@
+CREATE SCHEMA `DB1Project`;
+
+USE DB1Project;
+
+CREATE TABLE User(
+    UserID VARCHAR(30) NOT NULL, 
+    Fname VARCHAR(30),
+    Sname VARCHAR(30),
+    Email VARCHAR(50), 
+    Password VARCHAR(50), 
+    ActiveToday BOOL, 
+    Type VARCHAR(10), 
+    CONSTRAINT User_PK PRIMARY KEY (UserID)
+);
+
+CREATE TABLE ActiveOnDate(
+    UserID VARCHAR(30) NOT NULL, 
+    Dated DATE NOT NULL, 
+    CONSTRAINT ActiveOnDate_PK PRIMARY KEY (UserID, Dated), 
+    CONSTRAINT ActiveOnDate_FK_User FOREIGN KEY (UserID) 
+        REFERENCES User(UserID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE Course(
+    CourseID VARCHAR(30) NOT NULL, 
+    Name VARCHAR(30), 
+    Term INT,
+    AllowAnonymous BOOL, 
+    CONSTRAINT Course_PK PRIMARY KEY (CourseID)
+);
+
+CREATE TABLE Folder(
+    FolderID INT NOT NULL AUTO_INCREMENT, 
+    Name VARCHAR(30), 
+    CourseID VARCHAR(30), 
+    SuperFolder INT, 
+    CreatedBy VARCHAR(30),
+    CONSTRAINT Folder_PK PRIMARY KEY (FolderID), 
+    CONSTRAINT Folder_FK_Course FOREIGN KEY (CourseID)
+        REFERENCES Course(CourseID) 
+            ON DELETE SET NULL 
+            ON UPDATE CASCADE, 
+    CONSTRAINT Folder_FK_Super FOREIGN KEY (SuperFolder) 
+        REFERENCES Folder(FolderID)
+            ON DELETE SET NULL 
+            ON UPDATE CASCADE, 
+    CONSTRAINT Folder_FK_User FOREIGN KEY (CreatedBy) 
+        REFERENCES User(UserID)
+            ON DELETE SET NULL 
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE Post(
+    PostID INT NOT NULL,
+    Text VARCHAR(500),
+    Type VARCHAR(8) NOT NULL,
+    UserID VARCHAR(30) NOT NULL, 
+    CONSTRAINT Post_PK PRIMARY KEY (PostID), 
+    CONSTRAINT Post_FK_User FOREIGN KEY (UserID) 
+        REFERENCES User(UserID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE Thread(
+    ThreadID INT NOT NULL, 
+    Summary VARCHAR(100), 
+    ColorCode VARCHAR(10), 
+    FolderID INT NOT NULL, 
+    CONSTRAINT Thread_PK PRIMARY KEY (ThreadID),
+    CONSTRAINT Thread_FK_Post FOREIGN KEY (ThreadID)
+        REFERENCES Post(PostID)
+            ON DELETE CASCADE 
+            ON UPDATE CASCADE, 
+    CONSTRAINT Thread_FK_Folder FOREIGN KEY (FolderID) 
+        REFERENCES Folder(FolderID)
+            ON DELETE CASCADE 
+            ON UPDATE CASCADE
+);
+
+-- Multivalued attribute of Post modelled as a separate relation. 
+-- Assumed that each tag can be used on several different posts. 
+-- Hence, (PostID, Tag) is PK. 
+CREATE TABLE Tag(
+    ThreadID INT NOT NULL, 
+    Tag VARCHAR(30) NOT NULL,
+    CONSTRAINT Tag_PK PRIMARY KEY (ThreadID, Tag),
+    CONSTRAINT Tag_FK FOREIGN KEY (ThreadID) 
+        REFERENCES Thread(ThreadID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE Followup(
+    FollowupID INT NOT NULL, 
+    ThreadID INT NOT NULL,  
+    CONSTRAINT Followup_PK PRIMARY KEY (FollowupID),
+    CONSTRAINT Followup_FK_Post FOREIGN KEY (FollowupID)
+        REFERENCES Post(PostID)
+            ON DELETE CASCADE 
+            ON UPDATE CASCADE, 
+    CONSTRAINT Followup_FK_Folder FOREIGN KEY (ThreadID) 
+        REFERENCES Thread(ThreadID)
+            ON DELETE CASCADE 
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE Reply(
+    ReplyID INT NOT NULL, 
+    FollowupID INT, 
+    ThreadID INT, 
+    CONSTRAINT Reply_PK PRIMARY KEY (ReplyID),
+    CONSTRAINT Reply_FK_Post FOREIGN KEY (ReplyID)
+        REFERENCES Post(PostID)
+            ON DELETE CASCADE 
+            ON UPDATE CASCADE, 
+    CONSTRAINT Reply_FK_Followup FOREIGN KEY (FollowupID) 
+        REFERENCES Followup(FollowupID)
+            ON DELETE CASCADE 
+            ON UPDATE CASCADE, 
+    CONSTRAINT Reply_FK_Thread FOREIGN KEY (ThreadID)
+        REFERENCES Thread(ThreadID)
+            ON DELETE CASCADE 
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE UserInCourse(
+    UserID VARCHAR(30) NOT NULL, 
+    CourseID VARCHAR(30) NOT NULL,
+    CONSTRAINT UserInCourse_PK PRIMARY KEY (UserID, CourseID), 
+    CONSTRAINT UserInCourse_FK_User FOREIGN KEY (UserID) 
+        REFERENCES User(UserID)
+            ON DELETE CASCADE 
+            ON UPDATE CASCADE, 
+    CONSTRAINT UserInCourse_FK_Course FOREIGN KEY (CourseID) 
+        REFERENCES Course(CourseID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE GoodComment(
+    UserID VARCHAR(30) NOT NULL, 
+    PostID INT NOT NULL, 
+    CONSTRAINT GoodComment_PK PRIMARY KEY (UserID, PostID), 
+    CONSTRAINT GoodComment_FK_User FOREIGN KEY (UserID) 
+        REFERENCES User(UserID)
+            ON DELETE CASCADE 
+            ON UPDATE CASCADE, 
+    CONSTRAINT GoodComment_FK_Post FOREIGN KEY (PostID) 
+        REFERENCES Post(PostID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE ViewedBy(
+    UserID VARCHAR(30) NOT NULL, 
+    PostID INT NOT NULL, 
+    CONSTRAINT ViewedBy_PK PRIMARY KEY (UserID, PostID), 
+    CONSTRAINT ViewedBy_FK_User FOREIGN KEY (UserID) 
+        REFERENCES User(UserID)
+            ON DELETE CASCADE 
+            ON UPDATE CASCADE, 
+    CONSTRAINT ViewedBy_FK_Post FOREIGN KEY (PostID) 
+        REFERENCES Post(PostID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
