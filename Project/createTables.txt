@@ -95,20 +95,29 @@ CREATE TABLE Followup(
             ON UPDATE CASCADE
 );
 
-CREATE TABLE Reply(
+CREATE TABLE ReplyFollowup(
     ReplyID INT NOT NULL, 
     FollowupID INT, 
-    ThreadID INT, 
-    CONSTRAINT Reply_PK PRIMARY KEY (ReplyID),
-    CONSTRAINT Reply_FK_Post FOREIGN KEY (ReplyID)
+    CONSTRAINT ReplyFollowup_PK PRIMARY KEY (ReplyID),
+    CONSTRAINT ReplyFollowup_FK_Post FOREIGN KEY (ReplyID)
         REFERENCES Post(PostID)
             ON DELETE CASCADE 
             ON UPDATE CASCADE, 
-    CONSTRAINT Reply_FK_Followup FOREIGN KEY (FollowupID) 
+    CONSTRAINT ReplyFollowup_FK_Followup FOREIGN KEY (FollowupID) 
         REFERENCES Followup(FollowupID)
             ON DELETE CASCADE 
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE ReplyThread(
+    ReplyID INT NOT NULL, 
+    ThreadID INT, 
+    CONSTRAINT ReplyThread_PK PRIMARY KEY (ReplyID),
+    CONSTRAINT ReplyThread_FK_Post FOREIGN KEY (ReplyID)
+        REFERENCES Post(PostID)
+            ON DELETE CASCADE 
             ON UPDATE CASCADE, 
-    CONSTRAINT Reply_FK_Thread FOREIGN KEY (ThreadID)
+    CONSTRAINT ReplyThread_FK_Thread FOREIGN KEY (ThreadID)
         REFERENCES Thread(ThreadID)
             ON DELETE CASCADE 
             ON UPDATE CASCADE

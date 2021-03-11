@@ -66,12 +66,12 @@ select * from ViewedBy;
 insert into Post
 values (2, "Reply to first post", "reply", "roger"); 
 
-insert into Reply
+insert into Reply -- This does not match anymore. 
 values (2, NULL, 1);
 
 -- Show results.
 select * from Post;
-select * from Reply;
+select * from Reply; -- This does not match anymore. 
 
 -- Add data for statistics.
 insert into ActiveOnDate
@@ -106,6 +106,5 @@ where Text LIKE "%WAL%";
 
 -- Usecase 5: Statistics.
 select UserID, COUNT(ViewedBy.PostID) as Read, COUNT(PostID) as Created 
-from (ViewedBy right outer join User using (UserID)) left outer join Post using (UserID) 
+from ViewedBy right outer join User on (UserID == UserID) left outer join Post on (UserID == UserID) 
 group by UserID;
-
