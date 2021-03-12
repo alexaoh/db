@@ -9,7 +9,7 @@ CREATE TABLE User(
     UserID INT, 
     Fname VARCHAR(30),
     Sname VARCHAR(30),
-    Email VARCHAR(50), 
+    Email VARCHAR(50) UNIQUE, 
     UserPassword VARCHAR(50), 
     UserType VARCHAR(10), 
     CONSTRAINT User_PK PRIMARY KEY (UserID)
