@@ -1,0 +1,32 @@
+CREATE TABLE Followup(
+    PostID INT NOT NULL,  
+    FollowupID INT NOT NULL AUTO_INCREMENT, 
+    Text VARCHAR(500), 
+    UserID VARCHAR(30) NOT NULL, 
+    CONSTRAINT Followup_PK PRIMARY KEY (PostID, FollowupID),
+    CONSTRAINT Followup_FK_Post FOREIGN KEY (PostID)
+        REFERENCES Post(PostID)
+            ON DELETE CASCADE 
+            ON UPDATE CASCADE, 
+    CONSTRAINT Followup_FK_User FOREIGN KEY (UserID) 
+        REFERENCES User(UserID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+)ENGINE=MyISAM; -- change engine in order to user AUTO_INCREMENT in FollowupID PK-attribute. 
+
+CREATE TABLE ReplyFollowup(
+    ReplyID INT NOT NULL AUTO_INCREMENT, 
+    Text VARCHAR(500), 
+    UserID VARCHAR(30) NOT NULL,
+    PostID INT NOT NULL,
+    FollowupID INT NOT NULL, 
+    CONSTRAINT ReplyFollowup_PK PRIMARY KEY (ReplyID),
+    CONSTRAINT ReplyFollowup_FK_User FOREIGN KEY (UserID)
+        REFERENCES User(UserID)
+            ON DELETE CASCADE 
+            ON UPDATE CASCADE, 
+    CONSTRAINT ReplyFollowup_FK_Followup FOREIGN KEY (PostID, FollowupID)
+        REFERENCES Followup(PostID, FollowupID)
+            ON DELETE CASCADE 
+            ON UPDATE CASCADE
+)ENGINE=MyISAM; -- need to change engine her as well, in order to match the referenced table. 

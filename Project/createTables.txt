@@ -1,6 +1,6 @@
+-- Three top lines added in order to make our testing a bit more effective. 
 DROP DATABASE DB1Project;
 CREATE SCHEMA DB1Project;
-
 USE DB1Project;
 
 CREATE TABLE User(
@@ -32,93 +32,80 @@ CREATE TABLE Course(
 );
 
 CREATE TABLE Folder(
-    FolderID INT NOT NULL, 
+    FolderID INT NOT NULL AUTO_INCREMENT, 
     Name VARCHAR(30), 
-    CourseID VARCHAR(30), 
     SuperFolder INT, 
-    CreatedBy VARCHAR(30),
     CONSTRAINT Folder_PK PRIMARY KEY (FolderID), 
-    CONSTRAINT Folder_FK_Course FOREIGN KEY (CourseID)
-        REFERENCES Course(CourseID) 
-            ON DELETE SET NULL 
-            ON UPDATE CASCADE, 
     CONSTRAINT Folder_FK_Super FOREIGN KEY (SuperFolder) 
         REFERENCES Folder(FolderID)
-            ON DELETE SET NULL 
-            ON UPDATE CASCADE, 
-    CONSTRAINT Folder_FK_User FOREIGN KEY (CreatedBy) 
-        REFERENCES User(UserID)
             ON DELETE SET NULL 
             ON UPDATE CASCADE
 );
 
 CREATE TABLE Post(
-    PostID INT NOT NULL,
+    PostID INT NOT NULL AUTO_INCREMENT,
     Text VARCHAR(500),
-    Type VARCHAR(8) NOT NULL,
+    Summary VARCHAR(50), 
+    ColorCode VARCHAR(10), 
+    Tag VARCHAR(20), 
+    FolderID INT NOT NULL, 
     UserID VARCHAR(30) NOT NULL,
-    CONSTRAINT Post_PK PRIMARY KEY (PostID), 
+    CONSTRAINT Post_PK PRIMARY KEY (PostID),
+    CONSTRAINT Post_FK_Folder FOREIGN KEY (FolderID) 
+        REFERENCES Folder(FolderID)
+            ON DELETE CASCADE 
+            ON UPDATE CASCADE,
     CONSTRAINT Post_FK_User FOREIGN KEY (UserID) 
         REFERENCES User(UserID)
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );
 
-CREATE TABLE Thread(
-    ThreadID INT NOT NULL, 
-    Summary VARCHAR(100), 
-    ColorCode VARCHAR(10), 
-    Tag VARCHAR(20),  
-    FolderID INT NOT NULL, 
-    CONSTRAINT Thread_PK PRIMARY KEY (ThreadID),
-    CONSTRAINT Thread_FK_Post FOREIGN KEY (ThreadID)
-        REFERENCES Post(PostID)
-            ON DELETE CASCADE 
-            ON UPDATE CASCADE, 
-    CONSTRAINT Thread_FK_Folder FOREIGN KEY (FolderID) 
-        REFERENCES Folder(FolderID)
-            ON DELETE CASCADE 
-            ON UPDATE CASCADE
-);
-
 CREATE TABLE Followup(
+    PostID INT NOT NULL,  
     FollowupID INT NOT NULL, 
-    ThreadID INT NOT NULL,  
-    CONSTRAINT Followup_PK PRIMARY KEY (FollowupID),
-    CONSTRAINT Followup_FK_Post FOREIGN KEY (FollowupID)
+    Text VARCHAR(500), 
+    UserID VARCHAR(30) NOT NULL, 
+    CONSTRAINT Followup_PK PRIMARY KEY (PostID, FollowupID),
+    CONSTRAINT Followup_FK_Post FOREIGN KEY (PostID)
         REFERENCES Post(PostID)
             ON DELETE CASCADE 
             ON UPDATE CASCADE, 
-    CONSTRAINT Followup_FK_Folder FOREIGN KEY (ThreadID) 
-        REFERENCES Thread(ThreadID)
+    CONSTRAINT Followup_FK_User FOREIGN KEY (UserID) 
+        REFERENCES User(UserID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+); 
+
+CREATE TABLE ReplyPost(
+    ReplyID INT NOT NULL AUTO_INCREMENT, 
+    Text VARCHAR(500), 
+    UserID VARCHAR(30) NOT NULL,
+    PostID INT NOT NULL, 
+    CONSTRAINT ReplyPost_PK PRIMARY KEY (ReplyID),
+    CONSTRAINT ReplyPost_FK_User FOREIGN KEY (UserID)
+        REFERENCES User(UserID)
+            ON DELETE CASCADE 
+            ON UPDATE CASCADE, 
+    CONSTRAINT ReplyPost_FK_Post FOREIGN KEY (PostID)
+        REFERENCES Post(PostID)
             ON DELETE CASCADE 
             ON UPDATE CASCADE
 );
 
 CREATE TABLE ReplyFollowup(
-    ReplyID INT NOT NULL, 
-    FollowupID INT, 
+    ReplyID INT NOT NULL AUTO_INCREMENT, 
+    Text VARCHAR(500), 
+    UserID VARCHAR(30) NOT NULL,
+    PostID INT NOT NULL,
+    FollowupID INT NOT NULL, 
     CONSTRAINT ReplyFollowup_PK PRIMARY KEY (ReplyID),
-    CONSTRAINT ReplyFollowup_FK_Post FOREIGN KEY (ReplyID)
-        REFERENCES Post(PostID)
+    CONSTRAINT ReplyFollowup_FK_User FOREIGN KEY (UserID)
+        REFERENCES User(UserID)
             ON DELETE CASCADE 
             ON UPDATE CASCADE, 
-    CONSTRAINT ReplyFollowup_FK_Followup FOREIGN KEY (FollowupID) 
-        REFERENCES Followup(FollowupID)
-            ON DELETE CASCADE 
-            ON UPDATE CASCADE
-);
-
-CREATE TABLE ReplyThread(
-    ReplyID INT NOT NULL, 
-    ThreadID INT, 
-    CONSTRAINT ReplyThread_PK PRIMARY KEY (ReplyID),
-    CONSTRAINT ReplyThread_FK_Post FOREIGN KEY (ReplyID)
-        REFERENCES Post(PostID)
-            ON DELETE CASCADE 
-            ON UPDATE CASCADE, 
-    CONSTRAINT ReplyThread_FK_Thread FOREIGN KEY (ThreadID)
-        REFERENCES Thread(ThreadID)
+    CONSTRAINT ReplyFollowup_FK_Followup FOREIGN KEY (PostID, FollowupID)
+        REFERENCES Followup(PostID, FollowupID)
             ON DELETE CASCADE 
             ON UPDATE CASCADE
 );
@@ -137,15 +124,15 @@ CREATE TABLE UserInCourse(
             ON UPDATE CASCADE
 );
 
-CREATE TABLE GoodComment(
+CREATE TABLE LikedBy(
     UserID VARCHAR(30) NOT NULL, 
     PostID INT NOT NULL, 
-    CONSTRAINT GoodComment_PK PRIMARY KEY (UserID, PostID), 
-    CONSTRAINT GoodComment_FK_User FOREIGN KEY (UserID) 
+    CONSTRAINT LikedBy_PK PRIMARY KEY (UserID, PostID), 
+    CONSTRAINT LikedBy_FK_User FOREIGN KEY (UserID) 
         REFERENCES User(UserID)
             ON DELETE CASCADE 
             ON UPDATE CASCADE, 
-    CONSTRAINT GoodComment_FK_Post FOREIGN KEY (PostID) 
+    CONSTRAINT LikedBy_FK_Post FOREIGN KEY (PostID) 
         REFERENCES Post(PostID)
             ON DELETE CASCADE
             ON UPDATE CASCADE
@@ -161,6 +148,20 @@ CREATE TABLE ViewedBy(
             ON UPDATE CASCADE, 
     CONSTRAINT ViewedBy_FK_Post FOREIGN KEY (PostID) 
         REFERENCES Post(PostID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE FolderInCourse(
+    FolderID INT NOT NULL, 
+    CourseID VARCHAR(30) NOT NULL, 
+    CONSTRAINT FolderInCourse_PK PRIMARY KEY (FolderID, CourseID), 
+    CONSTRAINT FolderInCourse_FK_Folder FOREIGN KEY (FolderID)
+        REFERENCES Folder(FolderID)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE, 
+    CONSTRAINT FolderInCourse_FK_Course FOREIGN KEY (CourseID)
+        REFERENCES Course(CourseID)
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );
