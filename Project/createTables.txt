@@ -6,18 +6,18 @@ CREATE SCHEMA DB1Project;
 USE DB1Project;
 
 CREATE TABLE User(
-    UserID VARCHAR(30) NOT NULL, 
+    UserID INT, 
     Fname VARCHAR(30),
     Sname VARCHAR(30),
     Email VARCHAR(50), 
-    Password VARCHAR(50), 
-    Type VARCHAR(10), 
+    UserPassword VARCHAR(50), 
+    UserType VARCHAR(10), 
     CONSTRAINT User_PK PRIMARY KEY (UserID)
 );
 
 CREATE TABLE ActiveOnDate(
-    UserID VARCHAR(30) NOT NULL, 
-    Dated DATE NOT NULL, 
+    UserID INT, 
+    Dated DATE, 
     CONSTRAINT ActiveOnDate_PK PRIMARY KEY (UserID, Dated), 
     CONSTRAINT ActiveOnDate_FK_User FOREIGN KEY (UserID) 
         REFERENCES User(UserID)
@@ -26,7 +26,7 @@ CREATE TABLE ActiveOnDate(
 );
 
 CREATE TABLE Course(
-    CourseID VARCHAR(30) NOT NULL, 
+    CourseID CHAR(7), 
     Name VARCHAR(30), 
     Term VARCHAR(6),
     AllowAnonymous BOOL, 
@@ -34,24 +34,24 @@ CREATE TABLE Course(
 );
 
 CREATE TABLE Folder(
-    FolderID INT NOT NULL AUTO_INCREMENT, 
+    FolderID INT AUTO_INCREMENT, 
     Name VARCHAR(30), 
     SuperFolder INT, 
     CONSTRAINT Folder_PK PRIMARY KEY (FolderID), 
     CONSTRAINT Folder_FK_Super FOREIGN KEY (SuperFolder) 
         REFERENCES Folder(FolderID)
-            ON DELETE SET NULL 
+            ON DELETE CASCADE 
             ON UPDATE CASCADE
 );
 
 CREATE TABLE Post(
-    PostID INT NOT NULL AUTO_INCREMENT,
+    PostID INT AUTO_INCREMENT,
     Text VARCHAR(500),
     Summary VARCHAR(50), 
     ColorCode VARCHAR(10), 
     Tag VARCHAR(20), 
     FolderID INT NOT NULL, 
-    UserID VARCHAR(30) NOT NULL,
+    UserID INT NOT NULL,
     CONSTRAINT Post_PK PRIMARY KEY (PostID),
     CONSTRAINT Post_FK_Folder FOREIGN KEY (FolderID) 
         REFERENCES Folder(FolderID)
@@ -64,10 +64,10 @@ CREATE TABLE Post(
 );
 
 CREATE TABLE Followup(
-    PostID INT NOT NULL,  
-    FollowupID INT NOT NULL, 
+    PostID INT,  
+    FollowupID INT, 
     Text VARCHAR(500), 
-    UserID VARCHAR(30) NOT NULL, 
+    UserID INT NOT NULL, 
     CONSTRAINT Followup_PK PRIMARY KEY (PostID, FollowupID),
     CONSTRAINT Followup_FK_Post FOREIGN KEY (PostID)
         REFERENCES Post(PostID)
@@ -82,7 +82,7 @@ CREATE TABLE Followup(
 CREATE TABLE ReplyPost(
     ReplyID INT NOT NULL AUTO_INCREMENT, 
     Text VARCHAR(500), 
-    UserID VARCHAR(30) NOT NULL,
+    UserID INT NOT NULL,
     PostID INT NOT NULL, 
     CONSTRAINT ReplyPost_PK PRIMARY KEY (ReplyID),
     CONSTRAINT ReplyPost_FK_User FOREIGN KEY (UserID)
@@ -96,9 +96,9 @@ CREATE TABLE ReplyPost(
 );
 
 CREATE TABLE ReplyFollowup(
-    ReplyID INT NOT NULL AUTO_INCREMENT, 
+    ReplyID INT AUTO_INCREMENT, 
     Text VARCHAR(500), 
-    UserID VARCHAR(30) NOT NULL,
+    UserID INT NOT NULL,
     PostID INT NOT NULL,
     FollowupID INT NOT NULL, 
     CONSTRAINT ReplyFollowup_PK PRIMARY KEY (ReplyID),
@@ -113,8 +113,8 @@ CREATE TABLE ReplyFollowup(
 );
 
 CREATE TABLE UserInCourse(
-    UserID VARCHAR(30) NOT NULL, 
-    CourseID VARCHAR(30) NOT NULL,
+    UserID INT, 
+    CourseID CHAR(7),
     CONSTRAINT UserInCourse_PK PRIMARY KEY (UserID, CourseID), 
     CONSTRAINT UserInCourse_FK_User FOREIGN KEY (UserID) 
         REFERENCES User(UserID)
@@ -127,8 +127,8 @@ CREATE TABLE UserInCourse(
 );
 
 CREATE TABLE LikedBy(
-    UserID VARCHAR(30) NOT NULL, 
-    PostID INT NOT NULL, 
+    UserID INT, 
+    PostID INT, 
     CONSTRAINT LikedBy_PK PRIMARY KEY (UserID, PostID), 
     CONSTRAINT LikedBy_FK_User FOREIGN KEY (UserID) 
         REFERENCES User(UserID)
@@ -141,8 +141,8 @@ CREATE TABLE LikedBy(
 );
 
 CREATE TABLE ViewedBy(
-    UserID VARCHAR(30) NOT NULL, 
-    PostID INT NOT NULL, 
+    UserID INT, 
+    PostID INT, 
     CONSTRAINT ViewedBy_PK PRIMARY KEY (UserID, PostID), 
     CONSTRAINT ViewedBy_FK_User FOREIGN KEY (UserID) 
         REFERENCES User(UserID)
@@ -155,8 +155,8 @@ CREATE TABLE ViewedBy(
 );
 
 CREATE TABLE FolderInCourse(
-    FolderID INT NOT NULL, 
-    CourseID VARCHAR(30) NOT NULL, 
+    FolderID INT, 
+    CourseID CHAR(7), 
     CONSTRAINT FolderInCourse_PK PRIMARY KEY (FolderID, CourseID), 
     CONSTRAINT FolderInCourse_FK_Folder FOREIGN KEY (FolderID)
         REFERENCES Folder(FolderID)
