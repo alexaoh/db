@@ -1,3 +1,5 @@
+-- Authors: Alexander Ohrt, Martin Olderskog, Jim Totland - DB1.
+
 -- Three top lines added in order to make our testing a bit more effective. 
 DROP DATABASE DB1Project;
 CREATE SCHEMA DB1Project;
