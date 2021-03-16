@@ -6,7 +6,7 @@ from mysql.connector import errorcode
 class DB_connector():
 
     def __init__(self):
-        self.config = {
+        self._config = {
             'user': 'dbprojectuser',
             'password': 'admin',
             'host': '127.0.0.1',
@@ -19,7 +19,7 @@ class DB_connector():
 
         # Open connection with error-catching. Sjekk gjennom hvordan dette fungerer til slutt. 
         try:
-            self.cnx = mysql.connector.connect(**self.config)
+            self._cnx = mysql.connector.connect(**self._config)
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
                 print("Something is wrong with your user name or password")
@@ -30,4 +30,4 @@ class DB_connector():
 
     def close_connection(self):
         """Close connection."""
-        self.cnx.close()
+        self._cnx.close()
