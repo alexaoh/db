@@ -3,7 +3,7 @@
 import mysql.connector
 from mysql.connector import errorcode
 
-class DBConnector():
+class DB_connector():
 
     def __init__(self):
         self.config = {
@@ -17,7 +17,7 @@ class DBConnector():
     def connect(self):
         """Connect to database, with credentials given in config."""
 
-        # Open connection with error-catching. 
+        # Open connection with error-catching. Sjekk gjennom hvordan dette fungerer til slutt. 
         try:
             self.cnx = mysql.connector.connect(**self.config)
         except mysql.connector.Error as err:
