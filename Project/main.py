@@ -3,12 +3,13 @@
 from User_login_ctrl import User_login_ctrl
 from Make_post_ctrl import Make_post_ctrl
 from Make_reply_ctrl import Make_reply_ctrl
+from Search_post_ctrl import Search_post_ctrl
 
 if __name__ == "__main__":
 
     # Perhaps make some sort of menu or complete textual UI later?
     # All the arguments from the use cases should be given via a UI. 
-
+    
     # Usecase 1. A student logs into the system via email and password. 
     user = User_login_ctrl("ola@nordmann.com", "heisann sveisann")
 
@@ -37,3 +38,14 @@ if __name__ == "__main__":
     make_reply.connect()
     make_reply.insert_reply("The answer to your question will always be 42")
     make_reply.close_connection()
+    
+    # Usecase 4. A student searches for posts with a specific keyword "WAL".
+
+    student = User_login_ctrl("alex@vektor.no", "123456")
+    student.connect()
+    student.check_credentials()
+
+    search_posts = Search_post_ctrl(student)
+    search_posts.connect()
+    search_posts.total_search("WAL")
+    search_posts.close_connection()
