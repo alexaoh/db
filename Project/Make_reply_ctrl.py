@@ -7,8 +7,7 @@ class Make_reply_ctrl(DB_connector):
 
     def __init__(self, author, post_id):
         DB_connector.__init__(self)
-        author.find_user_id() # Finds user id
-        self._author_id = author._user_id
+        self._author_id = author.get_user_id() 
         self._post_id = post_id
 
     def insert_reply(self, text):
@@ -17,7 +16,7 @@ class Make_reply_ctrl(DB_connector):
 
         self._cursor = self._cnx.cursor(prepared=True)
 
-        reply_insertion = "INSERT INTO Replypost(Text, UserID, PostID) VALUES (%s, %s, %s)"
+        reply_insertion = "INSERT INTO ReplyPost(Text, UserID, PostID) VALUES (%s, %s, %s)"
 
         reply_values = (self._text, self._author_id, self._post_id)
 
@@ -37,8 +36,6 @@ class Make_reply_ctrl(DB_connector):
         if not fetched_data:
             print("User does not exist. Error")
             return
-        else:
-            print(fetched_data)
 
         self._author_type = fetched_data[0]
         if self._author_type == 'instructor':

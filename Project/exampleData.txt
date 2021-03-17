@@ -3,7 +3,8 @@ values (4, "Alexander", "Rått", "alex@vektor.no", "123456", "student"),
        (5, "Ola", "Nordmann", "ola@nordmann.com", "heisann sveisann", "instructor"), 
        (1, "Alex", "Johrt", "alex@test.com", "12345", "student"), 
        (2, "Jim", "Gull", "jimmern@test.com", "123456", "instructor"), 
-       (3, "Molder", "Skog", "molderskog@test.com", "123456", "instructor");
+       (3, "Molder", "Skog", "molderskog@test.com", "123456", "instructor")
+       (6, "Kari", "Nordmann", "kari@nordmann.no", "hade på badet", "instructor");
 
 insert into Folder(Name, SuperFolder)
 values ("Exam", NULL), ("Problem Sets", NULL), ("Lectures", NULL);

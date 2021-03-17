@@ -45,8 +45,8 @@ class User_login_ctrl(DB_connector):
 
         self._type = fetched_data
         
-    def find_user_id(self):
-        """Find UserID of the user from the database."""
+    def get_user_id(self):
+        """Find UserID of the user from the database and return it. Also save it in private variable."""
         self._cursor = self._cnx.cursor(prepared = True)
         select_query = "SELECT UserID FROM User WHERE Email = %s"
         self._cursor.execute(select_query, (self._email, )) 
@@ -59,3 +59,4 @@ class User_login_ctrl(DB_connector):
             return 
 
         self._user_id = fetched_data[0]
+        return self._user_id
