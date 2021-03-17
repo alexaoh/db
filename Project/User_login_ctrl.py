@@ -30,23 +30,24 @@ class User_login_ctrl(DB_connector):
         else: 
             print("The password does not match!")
 
-    def check_type(self):
-        """Check if user is student or instructor."""
+    def get_type(self):
+        """Check if user is student or instructor. Return the value and save in private variable."""
         self._cursor = self._cnx.cursor(prepared = True)
-        select_query = "SELECT ColorCode FROM User WHERE Email = %s"
+        select_query = "SELECT UserType FROM User WHERE Email = %s"
         self._cursor.execute(select_query, (self._email, )) 
 
-        fetched_data = self._cursor.fetchone()
+        fetched_data = self._cursor.fetchone()[0]
         self._cursor.close() # Close the cursor when done. 
-    
+        
         if not fetched_data:
             print("The email does not exist in the database.")
             return 
 
         self._type = fetched_data
+        return self._type
         
-    def find_user_id(self):
-        """Find UserID of the user from the database."""
+    def get_user_id(self):
+        """Find UserID of the user from the database and return it. Also save it in private variable."""
         self._cursor = self._cnx.cursor(prepared = True)
         select_query = "SELECT UserID FROM User WHERE Email = %s"
         self._cursor.execute(select_query, (self._email, )) 
@@ -59,3 +60,4 @@ class User_login_ctrl(DB_connector):
             return 
 
         self._user_id = fetched_data[0]
+        return self._user_id

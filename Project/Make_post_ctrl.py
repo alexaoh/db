@@ -7,8 +7,7 @@ class Make_post_ctrl(DB_connector):
 
     def __init__(self, author, folder_name):
         DB_connector.__init__(self)
-        author.find_user_id() # Finds user ID and stores it in author.user_id. Perhaps more logical to just return it via a getter?
-        self._author_id = author._user_id
+        self._author_id = author.get_user_id() 
         self._folder_name = folder_name
 
     def insert_post(self, summary, main_text, tag):
