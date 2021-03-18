@@ -3,13 +3,14 @@ from prettytable import from_db_cursor
 
 
 class Statistics_ctrl(DB_connector):
-    """Controls making a new reply to an existing post."""
+    """Control queries and compiling of statistics from the database."""
 
     def __init__(self, user):
         DB_connector.__init__(self)
         self._user_type = user.get_type()
 
     def compile_stats(self):
+        """Queries the database for statistics and compiles them."""
         if self._user_type != 'instructor':
             raise Exception("You do not have access to statistics!")
     
@@ -27,3 +28,4 @@ class Statistics_ctrl(DB_connector):
         self._cursor.execute(query)
         stats = from_db_cursor(self._cursor)
         print(stats)
+        self._cursor.close() # Close cursor when done. 

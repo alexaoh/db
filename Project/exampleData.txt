@@ -23,3 +23,6 @@ values ("Heisann, ingenting i dette replyet", 1, 2), ("WALL finnes her altså", 
 
 insert into ReplyFollowup(Text, UserID, PostID, FollowupId)
 values ("Her er det en WALaltså", 1, 2, 2);
+
+insert into ViewedBy
+values (1, 1), (1, 2), (5, 1), (5, 3), (5, 2);
