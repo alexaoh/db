@@ -23,7 +23,8 @@ class Statistics_ctrl(DB_connector):
                 "INNER JOIN "
                     "(SELECT u.UserID, COUNT(p.UserID) AS writtenPosts "
                     "FROM Post AS p RIGHT OUTER JOIN User AS u ON p.UserID = u.UserID "
-                    "GROUP BY u.UserID) dt2 USING (UserID) ")
+                    "GROUP BY u.UserID) dt2 USING (UserID) "
+                "ORDER BY readPosts DESC, writtenPosts DESC")
         
         self._cursor.execute(query)
         stats = from_db_cursor(self._cursor)
