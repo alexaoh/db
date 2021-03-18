@@ -3,7 +3,7 @@
 import mysql.connector
 from mysql.connector import errorcode
 
-class DB_connector():
+class DB_connector:
 
     def __init__(self):
         self._config = {
