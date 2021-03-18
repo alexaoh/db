@@ -4,6 +4,7 @@ from User_login_ctrl import User_login_ctrl
 from Make_post_ctrl import Make_post_ctrl
 from Make_reply_ctrl import Make_reply_ctrl
 from Search_post_ctrl import Search_post_ctrl
+from Statistics_ctrl import Statistics_ctrl
 
 if __name__ == "__main__":
 
@@ -49,3 +50,7 @@ if __name__ == "__main__":
     search_posts.connect()
     search_posts.total_search("WAL")
     search_posts.close_connection()
+
+    statistics = Statistics_ctrl(instructor)
+    statistics.connect()
+    statistics.compile_stats()
