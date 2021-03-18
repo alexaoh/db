@@ -28,7 +28,7 @@ class Search_post_ctrl(DB_connector):
         self._cursor.execute(select_query, keyword) 
 
         fetched_data = self._cursor.fetchall()
-        self._cursor.close() # Close the cursor when done. 
+        #self._cursor.close() # Close the cursor when done. 
 
         if not fetched_data:
             print("There are no posts that contain the keyword "+self._keyword)
@@ -68,7 +68,7 @@ class Search_post_ctrl(DB_connector):
         self._cursor.execute(select_query, ("%" + self._keyword + "%", )) 
 
         fetched_data = self._cursor.fetchall()
-        self._cursor.close() # Close the cursor when done. 
+        #self._cursor.close() # Close the cursor when done. 
         
         if not fetched_data:
             print("There are no post/thread-replies that contain the keyword "+self._keyword)
@@ -88,7 +88,7 @@ class Search_post_ctrl(DB_connector):
         self._cursor.execute(select_query, ("%" + self._keyword + "%", )) 
 
         fetched_data = self._cursor.fetchall()
-        self._cursor.close() # Close the cursor when done. 
+        #self._cursor.close() # Close the cursor when done. 
         print(fetched_data)
         if not fetched_data:
             print("There are no followup-replies that contain the keyword "+self._keyword)

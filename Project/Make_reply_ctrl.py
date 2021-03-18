@@ -24,7 +24,7 @@ class Make_reply_ctrl(DB_connector):
         self._cursor.execute(reply_insertion, reply_values)
         self.output_user_type_and_insert_color_code() 
         self._cnx.commit() # Make sure inserted data is committed to the db.
-        self._cursor.close() # Close the cursor when done.
+        #self._cursor.close() # Close the cursor when done.
 
         print("Your reply was inserted!")
 

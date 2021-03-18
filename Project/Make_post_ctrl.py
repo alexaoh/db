@@ -7,6 +7,7 @@ class Make_post_ctrl(DB_connector):
 
     def __init__(self, author, folder_name):
         DB_connector.__init__(self)
+        self._author = author
         self._author_id = author.get_user_id() 
         self._folder_name = folder_name
 
@@ -17,7 +18,7 @@ class Make_post_ctrl(DB_connector):
         self._tag = tag
     
         self._cursor = self._cnx.cursor(prepared = True)
-
+        
         insert_into_post = """INSERT INTO Post(Text, Summary, ColorCode, Tag, FolderID, UserID) VALUES 
                                     (%s, %s, %s, %s, %s, %s)"""
 
@@ -25,9 +26,19 @@ class Make_post_ctrl(DB_connector):
 
         self._cursor.execute(insert_into_post, values)
         self._cnx.commit() # Make sure inserted data is committed to the db.
-        self._cursor.close() # Close the cursor when done. 
+        
 
         print("Your post was inserted!")
+
+        # Find postID.
+        postID_query = "SELECT MAX(PostID) from Post"
+        self._cursor.execute(postID_query)
+        postID = self._cursor.fetchone()[0]
+
+        # Insert (UserID, PostID) into ViewedBy.
+        self._author.insert_into_viewed_by(postID)
+
+        #self._cursor.close() # Close the cursor when done. 
 
     def get_folder_id(self):
         """Find FolderID that belongs to the folder-name given in constructor."""
@@ -42,4 +53,5 @@ class Make_post_ctrl(DB_connector):
             return 
 
         self._folder_id = fetched_data[0]
+        self._cursor.close()
         return self._folder_id

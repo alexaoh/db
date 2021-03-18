@@ -29,4 +29,4 @@ class Statistics_ctrl(DB_connector):
         self._cursor.execute(query)
         stats = from_db_cursor(self._cursor)
         print(stats)
-        self._cursor.close() # Close cursor when done. 
+        #self._cursor.close() # Close cursor when done. 

@@ -26,9 +26,8 @@ if __name__ == "__main__":
 
     make_post = Make_post_ctrl(user, "Exam")
     make_post.connect()
-    make_post.insert_post("This is a student's post", "Hello! I have a question regarding Exam H2022. How is task 3 calculated?", 
-                            "Question")     
-    make_post.close_connection()
+    make_post.insert_post("This is a student's post", "Hello! I have a question regarding Exam H2022. How is task 3 calculated?", "Question")     
+    #make_post.close_connection()
 
     # Usecase 3. An instructor replies to a post belonging to the folder "Exam". The input to this is the id of the post replied to. For instance, the post in usecase 2
     instructor = User_login_ctrl("kari@nordmann.no", "hade på badet")
@@ -51,6 +50,7 @@ if __name__ == "__main__":
     search_posts.total_search("WAL")
     search_posts.close_connection()
 
+    # Usecase 5. Compile statistics. 
     statistics = Statistics_ctrl(instructor)
     statistics.connect()
     statistics.compile_stats()

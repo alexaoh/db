@@ -14,10 +14,10 @@ class User_login_ctrl(DB_connector):
         """Checks if given password matches the password of the tuple with the given email in db."""
         self._cursor = self._cnx.cursor(prepared = True)
         select_query = "SELECT UserPassword FROM User WHERE Email = %s"
-        self._cursor.execute(select_query, (self._email, )) # Dette kommaet måtte med, men litt usikker på hvorfor. Sjekk dette senere!
+        self._cursor.execute(select_query, (self._email, )) 
 
         fetched_data = self._cursor.fetchone()
-        self._cursor.close() # Close the cursor when done. 
+        #self._cursor.close() # Close the cursor when done. 
 
         if not fetched_data:
             print("Your email is not registered in the database.")
@@ -37,7 +37,7 @@ class User_login_ctrl(DB_connector):
         self._cursor.execute(select_query, (self._email, )) 
 
         fetched_data = self._cursor.fetchone()[0]
-        self._cursor.close() # Close the cursor when done. 
+        #self._cursor.close() # Close the cursor when done. 
         
         if not fetched_data:
             print("The email does not exist in the database.")
@@ -53,7 +53,7 @@ class User_login_ctrl(DB_connector):
         self._cursor.execute(select_query, (self._email, )) 
 
         fetched_data = self._cursor.fetchone()
-        self._cursor.close() # Close the cursor when done. 
+        #self._cursor.close() # Close the cursor when done. 
     
         if not fetched_data:
             print("The email does not exist in the database.")
@@ -61,3 +61,12 @@ class User_login_ctrl(DB_connector):
 
         self._user_id = fetched_data[0]
         return self._user_id
+
+    def insert_into_viewed_by(self, postID):
+        """Insert user into ViewedBy when viewing a table."""
+        self._cursor = self._cnx.cursor(prepared=True)
+        insert_query = "INSERT INTO ViewedBy VALUES (%s, %s)"
+        values = (self.get_user_id(), postID)
+        self._cursor.execute(insert_query, values)
+        #self._cursor.close()
+        self._cnx.commit() # Make sure inserted data is committed to the db.
