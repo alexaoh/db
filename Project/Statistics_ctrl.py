@@ -28,4 +28,3 @@ class Statistics_ctrl():
         self._cursor.execute(query)
         stats = from_db_cursor(self._cursor)
         print(stats)
-

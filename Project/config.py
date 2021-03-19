@@ -14,10 +14,9 @@ config = {
 
 
 def connect():
-        '''Returns a connection to the database, with credentials given by config.'''
-
+        """Returns a connection to the database, with credentials given by config."""
         # Open connection with error-catching. Sjekk gjennom hvordan dette fungerer til slutt. 
-        cnx = None
+        #cnx = None
         try:
             cnx = mysql.connector.connect(**config)
         except mysql.connector.Error as err:
@@ -25,6 +24,6 @@ def connect():
                 print("Something is wrong with your user name or password")
             elif err.errno == errorcode.ER_BAD_DB_ERROR:
                 print("Database does not exist")
-            else:
-                print(err)      
+            else:  
+                raise Exception(err) # Raised exception here to stop the program from continuing. Should probably solve differently later. 
         return cnx

@@ -1,7 +1,7 @@
 """Main application program."""
 
 
-from DB_connector import *
+from config import *
 from User_login_ctrl import User_login_ctrl
 from Make_post_ctrl import Make_post_ctrl
 from Make_reply_ctrl import Make_reply_ctrl
@@ -48,6 +48,5 @@ if __name__ == "__main__":
     # Usecase 5. Compile statistics. 
     statistics = Statistics_ctrl(globalCnx, instructor)
     statistics.compile_stats()
-
 
     globalCnx.close()
