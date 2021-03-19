@@ -1,14 +1,13 @@
 """Controller for user login."""
 
-from DB_connector import DB_connector
-
-class User_login_ctrl(DB_connector):
+class User_login_ctrl():
     """Controls user logins."""
 
-    def __init__(self, email, password):
-        DB_connector.__init__(self)
+    def __init__(self, cnx, email, password):
+        self._cnx = cnx
         self._email = email
         self._password = password
+
 
     def check_credentials(self):
         """Checks if given password matches the password of the tuple with the given email in db."""

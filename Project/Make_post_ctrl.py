@@ -1,12 +1,12 @@
 """Controller to make a new post in the forum."""
 
-from DB_connector import DB_connector
 
-class Make_post_ctrl(DB_connector):
+class Make_post_ctrl():
     """Controls making of new posts."""
 
-    def __init__(self, author, folder_name):
-        DB_connector.__init__(self)
+    def __init__(self, cnx, author, folder_name):
+        self._cnx = cnx
+        self._cursor = cnx.cursor(prepared = True)
         self._author = author
         self._author_id = author.get_user_id() 
         self._folder_name = folder_name
@@ -16,8 +16,10 @@ class Make_post_ctrl(DB_connector):
         self._summary = summary
         self._text = main_text
         self._tag = tag
+
+        if(self._cursor):
+            print("heyo")
     
-        self._cursor = self._cnx.cursor(prepared = True)
         
         insert_into_post = """INSERT INTO Post(Text, Summary, ColorCode, Tag, FolderID, UserID) VALUES 
                                     (%s, %s, %s, %s, %s, %s)"""
@@ -53,5 +55,4 @@ class Make_post_ctrl(DB_connector):
             return 
 
         self._folder_id = fetched_data[0]
-        self._cursor.close()
         return self._folder_id

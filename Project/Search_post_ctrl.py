@@ -1,12 +1,10 @@
 """Controller to search the posts for specific keywords."""
 
 
-from DB_connector import DB_connector
+class Search_post_ctrl():
 
-class Search_post_ctrl(DB_connector):
-
-    def __init__(self, user):
-        DB_connector.__init__(self)
+    def __init__(self, cnx, user):
+        self._cnx = cnx
         self._user = user 
         self._user.check_credentials() # Check credentials again (to verify that the user is allowed to search.)
         # This is perhaps not necessary when the program is more complete, but will leave it in for now. 

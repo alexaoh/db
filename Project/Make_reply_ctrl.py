@@ -1,12 +1,12 @@
 """Controller to make (instructor) reply directly to post in the forum."""
 
-from DB_connector import DB_connector
 
-class Make_reply_ctrl(DB_connector):
+
+class Make_reply_ctrl():
     """Controls making a new reply to an existing post."""
 
-    def __init__(self, author, post_id):
-        DB_connector.__init__(self)
+    def __init__(self, cnx, author, post_id):
+        self._cnx = cnx
         self._author_id = author.get_user_id() 
         self._author_type = author.get_type()
         self._post_id = post_id

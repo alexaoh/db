@@ -1,12 +1,11 @@
-from DB_connector import DB_connector
 from prettytable import from_db_cursor
 
 
-class Statistics_ctrl(DB_connector):
+class Statistics_ctrl():
     """Control queries and compiling of statistics from the database."""
 
-    def __init__(self, user):
-        DB_connector.__init__(self)
+    def __init__(self, cnx, user):
+        self._cnx = cnx
         self._user_type = user.get_type()
 
     def compile_stats(self):
@@ -29,4 +28,4 @@ class Statistics_ctrl(DB_connector):
         self._cursor.execute(query)
         stats = from_db_cursor(self._cursor)
         print(stats)
-        #self._cursor.close() # Close cursor when done. 
+
