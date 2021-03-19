@@ -16,7 +16,7 @@ config = {
 def connect():
         """Returns a connection to the database, with credentials given by config."""
         # Open connection with error-catching. Sjekk gjennom hvordan dette fungerer til slutt. 
-        #cnx = None
+        cnx = None
         try:
             cnx = mysql.connector.connect(**config)
         except mysql.connector.Error as err:
