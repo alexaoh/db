@@ -1,5 +1,6 @@
 """Main application program."""
 
+from UI import *
 from DB_connector import DB_connector
 from User_login_ctrl import User_login_ctrl
 from Make_post_ctrl import Make_post_ctrl
@@ -8,12 +9,17 @@ from Search_post_ctrl import Search_post_ctrl
 from Statistics_ctrl import Statistics_ctrl
 
 if __name__ == "__main__":
+    printWelcome()
 
     # Make connection-object first.
     connection = DB_connector()
     
     # Usecase 1. A student logs into the system via email and password. 
-    user = User_login_ctrl(connection, "ola@nordmann.com", "heisann sveisann")
+    loggedIn = False
+    while not loggedIn:  
+        email, password = loginInput()
+        user = User_login_ctrl(connection, email, password) #"ola@nordmann.com", "heisann sveisann"
+        loggedIn = user.check_credentials() # Check the supplied username and password towards the User-table. 
 
     # Usecase 2. A student makes a post belonging to the folder "Exam", tagged with "Question". Input is text, "Exam", "Question".
 

@@ -11,7 +11,7 @@ class User_login_ctrl:
         # Make cursor for each object. 
         self._cursor = self._connection._cnx.cursor(prepared = True)
 
-        self.check_credentials()
+        #self.check_credentials()
 
     def check_credentials(self):
         """Checks if given password matches the password of the tuple with the given email in db."""
@@ -22,14 +22,15 @@ class User_login_ctrl:
 
         if not fetched_data:
             print("Your email is not registered in the database.")
-            return 
+            return False
 
         fetched_password = fetched_data[0]
         if fetched_password == self._password:
             print("Congratz, u ("+self._email+") are logged in!")
-            return 
+            return True
         else: 
             print("The password does not match!")
+            return False
 
     def get_type(self):
         """Check if user is student or instructor. Return the value and save in private variable."""
