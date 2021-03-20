@@ -13,6 +13,7 @@ class DB_connector:
             'database': 'DB1Project',
             'raise_on_warnings': True # Usikker på om denne trengs i tillegg til try/except nedenfor. 
         }
+        self.connect() # Make a connection to the database. 
 
     def connect(self):
         """Connect to database, with credentials given in config."""
@@ -31,3 +32,8 @@ class DB_connector:
     def close_connection(self):
         """Close connection."""
         self._cnx.close()
+
+    def __del__(self):
+        print("DB_conn del has been called!")
+        self.close_connection()
+        

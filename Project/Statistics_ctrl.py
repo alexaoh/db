@@ -1,20 +1,22 @@
-from DB_connector import DB_connector
+"""Controller to compile some statistics."""
+
 from prettytable import from_db_cursor
 
-
-class Statistics_ctrl(DB_connector):
+class Statistics_ctrl:
     """Control queries and compiling of statistics from the database."""
 
-    def __init__(self, user):
-        DB_connector.__init__(self)
+    def __init__(self, connection, user):
+        self._connection = connection
         self._user_type = user.get_type()
+
+        # Make cursor for each object. 
+        self._cursor = self._connection._cnx.cursor(prepared = True)
 
     def compile_stats(self):
         """Queries the database for statistics and compiles them."""
         if self._user_type != 'instructor':
             raise Exception("You do not have access to statistics!")
     
-        self._cursor = self._cnx.cursor(prepared=True)
         query = ( "SELECT UserID, readPosts AS 'Posts read', writtenPosts AS 'Posts written' "
                     "FROM (SELECT UserID, COUNT(PostID) AS readPosts "
                     "FROM ViewedBy RIGHT OUTER JOIN User USING (UserID) "
@@ -29,4 +31,8 @@ class Statistics_ctrl(DB_connector):
         self._cursor.execute(query)
         stats = from_db_cursor(self._cursor)
         print(stats)
-        #self._cursor.close() # Close cursor when done. 
+    
+    def __del__(self):
+        print("Statistics del has been called!")
+        self._cursor.close() # Each object's cursor is closed when program terminates.    
+        
