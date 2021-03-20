@@ -65,8 +65,14 @@ class User_login_ctrl(DB_connector):
     def insert_into_viewed_by(self, postID):
         """Insert user into ViewedBy when viewing a table."""
         self._cursor = self._cnx.cursor(prepared=True)
-        insert_query = "INSERT INTO ViewedBy VALUES (%s, %s)"
+
+        # Need to check if the row exists already. 
+        check_query = "SELECT UserID, PostID FROM ViewedBy WHERE (UserID = %s) AND (PostID = %s)"
         values = (self.get_user_id(), postID)
-        self._cursor.execute(insert_query, values)
-        #self._cursor.close()
-        self._cnx.commit() # Make sure inserted data is committed to the db.
+        self._cursor.execute(check_query, values)
+
+        if not self._cursor.fetchall():
+            insert_query = "INSERT INTO ViewedBy VALUES (%s, %s)"
+            self._cursor.execute(insert_query, values)
+            #self._cursor.close()
+            self._cnx.commit() # Make sure inserted data is committed to the db.

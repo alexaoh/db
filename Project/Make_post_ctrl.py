@@ -30,13 +30,9 @@ class Make_post_ctrl(DB_connector):
 
         print("Your post was inserted!")
 
-        # Find postID.
-        postID_query = "SELECT MAX(PostID) from Post"
-        self._cursor.execute(postID_query)
-        postID = self._cursor.fetchone()[0]
-
-        # Insert (UserID, PostID) into ViewedBy.
-        self._author.insert_into_viewed_by(postID)
+        # Keep statistics. 
+        postID = self._cursor.lastrowid # Get id of post inserted above. 
+        self._author.insert_into_viewed_by(postID) # Insert (UserID, PostID) into ViewedBy.
 
         #self._cursor.close() # Close the cursor when done. 
 

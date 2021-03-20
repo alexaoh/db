@@ -7,6 +7,7 @@ class Make_reply_ctrl(DB_connector):
 
     def __init__(self, author, post_id):
         DB_connector.__init__(self)
+        self._author = author
         self._author_id = author.get_user_id() 
         self._author_type = author.get_type()
         self._post_id = post_id
@@ -24,9 +25,13 @@ class Make_reply_ctrl(DB_connector):
         self._cursor.execute(reply_insertion, reply_values)
         self.output_user_type_and_insert_color_code() 
         self._cnx.commit() # Make sure inserted data is committed to the db.
-        #self._cursor.close() # Close the cursor when done.
 
         print("Your reply was inserted!")
+
+        # Keep statistics. 
+        self._author.insert_into_viewed_by(self._post_id) # Insert (UserID, PostID) into ViewedBy.
+
+        #self._cursor.close() # Close the cursor when done.
 
     def output_user_type_and_insert_color_code(self):
         """Customize output based on author type. Insert correct ColorCode into database."""
