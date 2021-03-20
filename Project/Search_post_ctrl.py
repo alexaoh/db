@@ -92,5 +92,4 @@ class Search_post_ctrl:
         print()
 
     def __del__(self):
-        print("Search_post del has been called!")
         self._cursor.close() # Each object's cursor is closed when program terminates. 

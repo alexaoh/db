@@ -47,5 +47,4 @@ class Make_post_ctrl:
         return self._folder_id
 
     def __del__(self):
-        print("Make_post del has been called!")
         self._cursor.close() # Each object's cursor is closed when program terminates. 

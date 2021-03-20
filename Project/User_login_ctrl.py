@@ -72,5 +72,4 @@ class User_login_ctrl:
             self._connection._cnx.commit() # Make sure inserted data is committed to the db.
     
     def __del__(self):
-        print("User_login del has been called!",self._email)
         self._cursor.close() # Each object's cursor is closed when program terminates. 

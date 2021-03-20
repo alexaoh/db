@@ -46,5 +46,4 @@ class Make_reply_ctrl:
             raise Exception("Something went wrong... Neither a student nor an instructor answered.")
 
     def __del__(self):
-        print("Make_reply del has been called!")
         self._cursor.close() # Each object's cursor is closed when program terminates. 

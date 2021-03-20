@@ -34,6 +34,5 @@ class DB_connector:
         self._cnx.close()
 
     def __del__(self):
-        print("DB_conn del has been called!")
         self.close_connection()
         

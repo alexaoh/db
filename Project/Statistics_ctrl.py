@@ -33,6 +33,5 @@ class Statistics_ctrl:
         print(stats)
     
     def __del__(self):
-        print("Statistics del has been called!")
         self._cursor.close() # Each object's cursor is closed when program terminates.    
         
