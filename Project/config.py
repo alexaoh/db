@@ -6,7 +6,7 @@ from mysql.connector import errorcode
 
 config = {
     'user': 'root',
-    'password': '?????',
+    'password': 'IcloudSk18',
     'host': 'localhost',
     'database': 'DB1Project',
     'raise_on_warnings': True # Usikker på om denne trengs i tillegg til try/except nedenfor. 

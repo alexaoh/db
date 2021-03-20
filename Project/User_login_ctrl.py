@@ -20,14 +20,15 @@ class User_login_ctrl():
 
         if not fetched_data:
             print("Your email is not registered in the database.")
-            return 
+            return False
 
         fetched_password = fetched_data[0]
         if fetched_password == self._password:
             print("Congratz, u r logged in!")
-            return 
+            return True
         else: 
             print("The password does not match!")
+            return False
 
     def get_type(self):
         """Check if user is student or instructor. Return the value and save in private variable."""

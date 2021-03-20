@@ -7,6 +7,7 @@ from Make_post_ctrl import Make_post_ctrl
 from Make_reply_ctrl import Make_reply_ctrl
 from Search_post_ctrl import Search_post_ctrl
 from Statistics_ctrl import Statistics_ctrl
+from UI import * 
 
 
 
@@ -16,10 +17,14 @@ if __name__ == "__main__":
     # All the arguments from the use cases should be given via a UI. 
 
     globalCnx = connect()
+    printWelcome()
     
     # Usecase 1. A student logs into the system via email and password. 
-    user = User_login_ctrl(globalCnx, "ola@nordmann.com", "heisann sveisann")
-    user.check_credentials() # Check the supplied username and password towards the User-table. 
+    loggedIn = False
+    while not loggedIn:
+        email, password = loginInput()
+        user = User_login_ctrl(globalCnx, email, password) #"ola@nordmann.com", "heisann sveisann"
+        loggedIn = user.check_credentials() # Check the supplied username and password towards the User-table. 
     
 
     # Usecase 2. A student makes a post belonging to the folder "Exam", tagged with "Question". Input is text, "Exam", "Question".
