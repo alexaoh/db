@@ -3,7 +3,7 @@ values (4, "Alexander", "Rått", "alex@vektor.no", "123456", "student"),
        (5, "Ola", "Nordmann", "ola@nordmann.com", "heisann sveisann", "instructor"), 
        (1, "Alex", "Johrt", "alex@test.com", "12345", "student"), 
        (2, "Jim", "Gull", "jimmern@test.com", "123456", "instructor"), 
-       (3, "Molder", "Skog", "molderskog@test.com", "123456", "instructor")
+       (3, "Molder", "Skog", "molderskog@test.com", "123456", "instructor"), 
        (6, "Kari", "Nordmann", "kari@nordmann.no", "hade på badet", "instructor");
 
 insert into Folder(Name, SuperFolder)
@@ -19,7 +19,10 @@ insert into Followup
 values (3, 1, "First WALfollowup for testing!", 1), (2, 2, "Second followup for testing!", 2);
 
 insert into ReplyPost(Text, UserID, PostID)
-values ("Heisann, ingenting i dette replyet", 1, 2), ("WALL finnes her altså", 2, 3), ("Finnes ikke her", 2, 23);
+values ("Heisann, ingenting i dette replyet", 1, 2), ("WALL finnes her altså", 2, 3), ("Finnes ikke her", 2, 1);
 
 insert into ReplyFollowup(Text, UserID, PostID, FollowupId)
 values ("Her er det en WALaltså", 1, 2, 2);
+
+insert into ViewedBy
+values (1, 1), (1, 2), (5, 1), (5, 3), (5, 2), (1, 5), (1, 4);

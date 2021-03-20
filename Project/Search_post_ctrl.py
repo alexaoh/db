@@ -1,15 +1,14 @@
 """Controller to search the posts for specific keywords."""
 
+class Search_post_ctrl:
+    """Control searching for posts (with specific keywords mentioned)."""
 
-from DB_connector import DB_connector
-
-class Search_post_ctrl(DB_connector):
-
-    def __init__(self, user):
-        DB_connector.__init__(self)
+    def __init__(self, connection, user):
+        self._connection = connection
         self._user = user 
-        self._user.check_credentials() # Check credentials again (to verify that the user is allowed to search.)
-        # This is perhaps not necessary when the program is more complete, but will leave it in for now. 
+
+        # Make cursor for each object. 
+        self._cursor = self._connection._cnx.cursor(prepared = True)
 
     def total_search(self, keyword):
         """Search through all required tables for the keyword."""
@@ -22,13 +21,11 @@ class Search_post_ctrl(DB_connector):
 
     def search_post(self):
         """Search the Post-table for the keyword. Both 'Text' and 'Summary'. Print PostID or empty list."""
-        self._cursor = self._cnx.cursor(prepared = True)
         select_query = "SELECT PostID FROM Post WHERE Text LIKE %s or Summary LIKE %s"
         keyword = ("%" + self._keyword + "%", "%" + self._keyword + "%")
         self._cursor.execute(select_query, keyword) 
 
         fetched_data = self._cursor.fetchall()
-        self._cursor.close() # Close the cursor when done. 
 
         if not fetched_data:
             print("There are no posts that contain the keyword "+self._keyword)
@@ -42,13 +39,11 @@ class Search_post_ctrl(DB_connector):
 
     def search_followup(self):
         """Search the Followup-table for the keyword. Print (PostID, FollowupID) or empty list."""
-        self._cursor = self._cnx.cursor(prepared = True)
         select_query = "SELECT PostID, FollowupID FROM Followup WHERE Text LIKE %s"
         
         self._cursor.execute(select_query, ("%" + self._keyword + "%", )) 
 
         fetched_data = self._cursor.fetchall()
-        self._cursor.close() # Close the cursor when done. 
 
         if not fetched_data:
             print("There are no followups that contain the keyword "+self._keyword)
@@ -62,13 +57,11 @@ class Search_post_ctrl(DB_connector):
 
     def search_reply_post(self):
         """Search the ReplyPost-table for the keyword. Print (ReplyID, PostID) or empty list."""
-        self._cursor = self._cnx.cursor(prepared = True)
         select_query = "SELECT ReplyID, PostID FROM ReplyPost INNER JOIN Post USING (PostID) WHERE ReplyPost.Text LIKE %s"
         
         self._cursor.execute(select_query, ("%" + self._keyword + "%", )) 
 
         fetched_data = self._cursor.fetchall()
-        self._cursor.close() # Close the cursor when done. 
         
         if not fetched_data:
             print("There are no post/thread-replies that contain the keyword "+self._keyword)
@@ -82,14 +75,12 @@ class Search_post_ctrl(DB_connector):
 
     def search_reply_followup(self):
         """Search the ReplyFollowup-table for the keyword. Print (ReplyID, PostID, FollowupID) or empty list."""
-        self._cursor = self._cnx.cursor(prepared = True)
         select_query = "SELECT ReplyID, PostID, FollowupID FROM ReplyFollowup INNER JOIN Post USING (PostID) WHERE ReplyFollowup.Text LIKE %s"
         
         self._cursor.execute(select_query, ("%" + self._keyword + "%", )) 
 
         fetched_data = self._cursor.fetchall()
-        self._cursor.close() # Close the cursor when done. 
-        print(fetched_data)
+        
         if not fetched_data:
             print("There are no followup-replies that contain the keyword "+self._keyword)
             print(fetched_data)
@@ -99,3 +90,6 @@ class Search_post_ctrl(DB_connector):
         for val in fetched_data:
             print("("+str(val[0])+", "+str(val[1])+", "+str(val[2])+")", end=" ")
         print()
+
+    def __del__(self):
+        self._cursor.close() # Each object's cursor is closed when program terminates. 
