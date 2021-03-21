@@ -10,12 +10,10 @@ class UI_ctrl:
 
     def __init__(self, connection):
         self._connection = connection
-
-        # Make cursor for each object. 
         self._cursor = self._connection._cnx.cursor(prepared = True)
+        self.user = None
 
     def main(self):
-        # Flyttet det som lå i main hit. Endre det gjerne dersom du ønsker det ;). 
         self.printWelcome()
         self.insertAndPrint()
 
@@ -23,26 +21,32 @@ class UI_ctrl:
         loggedIn = False
         while not loggedIn:  
             email, password = self.loginInput()
-            user = User_login_ctrl(self._connection, email, password)
-            loggedIn = user.check_credentials() # Check the supplied username and password towards the User-table. 
+            self.user = User_login_ctrl(self._connection, email, password)
+            loggedIn = self.user.check_credentials() # Check the supplied username and password towards the User-table. 
 
         inp = None
         while inp != 'q':
             self.printUsecases()
-            inp = input()
+            inp = input("Enter the number of the feature you would like to explore: ")
             
             if inp == '1':
                 folderName, summary, text, tag = self.featureOne()
-                make_post = Make_post_ctrl(self._connection, user, folderName)
+                make_post = Make_post_ctrl(self._connection, self.user, folderName)
                 make_post.insert_post(summary, text, tag)
+
             elif inp == '2':
                 reply, postID = self.featureTwo()
-                make_reply = Make_reply_ctrl(self._connection, user, postID)
+                make_reply = Make_reply_ctrl(self._connection, self.user, postID)
                 make_reply.insert_reply(reply)
+
             elif inp == '3':
-                pass
+                keyword = self.featureThree()
+                search_posts = Search_post_ctrl(self._connection)
+                search_posts.total_search(keyword)
+
             elif inp == '4':
-                pass
+                statistics = Statistics_ctrl(self._connection, self.user)
+                statistics.compile_stats()
             elif inp == 'q':
                 pass
             else:
@@ -126,7 +130,7 @@ class UI_ctrl:
 
         folders = []
         print("\nAvailable folders:\n ")
-        for folderName in cursor:
+        for folderName in self._cursor:
             print(folderName[0])
             folders.append(folderName[0])
 
@@ -144,9 +148,7 @@ class UI_ctrl:
         return inp, summary, text, tag
 
     def featureTwo(self):
-        #curs1 = connection._cnx.cursor(prepared = True)
-        #curs2 = connection._cnx.cursor(prepared = True)
-
+        """"Returns the reply-text and post-id of which the user replies to."""
         getPosts = ("SELECT PostID, Summary FROM Post")
         self._cursor.execute(getPosts)
         ids = []
@@ -154,7 +156,7 @@ class UI_ctrl:
             ids.append(postID)
 
         self._cursor.execute(getPosts)
-        print("Available posts to reply to: ")
+        print("\nAvailable posts to reply to: ")
         print(from_db_cursor(self._cursor))
 
         chosenPost = False
@@ -169,6 +171,11 @@ class UI_ctrl:
         text = input("Write your reply: ")
 
         return text, int(postID)
+    
+    def featureThree(self):
+        """Returns the inputted keyword to search for."""
+        keyword = input("Write your search keyword: ")
+        return keyword
 
     def __del__(self):
         self._cursor.close() # Each object's cursor is closed when program terminates.   
