@@ -29,6 +29,8 @@ def loginInput():
 
 def insertAndPrint(connection):
     '''Insert some inital data in the db and prints available users'''
+    # Should we also insert a course maybe? Maybe the User should choose a course first.
+
     cursor = connection._cnx.cursor(prepared = True)
 
     addUser = ('''INSERT INTO User VALUES
@@ -38,9 +40,8 @@ def insertAndPrint(connection):
     
     userOne = (1, 'Ola', 'Nordmann', 'ola@nordmann.no', 123, 'student')
     userTwo = (2, 'Kari', 'Nordmann', 'kari@nordmann.no', 'password', 'instructor')
-
     folder = (1, 'Exam', None)
-    cursor.execute(addFolder, folder)
+
 
     try:
         cursor.execute(addUser, userOne)

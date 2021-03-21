@@ -19,7 +19,7 @@ if __name__ == "__main__":
     loggedIn = False
     while not loggedIn:  
         email, password = loginInput()
-        user = User_login_ctrl(connection, email, password) #"ola@nordmann.com", "heisann sveisann"
+        user = User_login_ctrl(connection, email, password)
         loggedIn = user.check_credentials() # Check the supplied username and password towards the User-table. 
 
     # Usecase 2. A student makes a post belonging to the folder "Exam", tagged with "Question". Input is text, "Exam", "Question".
