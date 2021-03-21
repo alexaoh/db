@@ -17,7 +17,7 @@ class Statistics_ctrl:
         if self._user_type != 'instructor':
             raise Exception("You do not have access to statistics!")
     
-        query = ( '''
+        query = ( """
                     SELECT 
                         CONCAT(Fname, ' ', Sname) AS Name,
                         Email,
@@ -42,7 +42,7 @@ class Statistics_ctrl:
                         RIGHT OUTER JOIN User AS u ON p.UserID = u.UserID
                         GROUP BY u.UserID) dt2 USING (UserID)) stats USING (UserID)
                     ORDER BY stats.readPosts DESC;
-                    ''')
+                    """)
         
         self._cursor.execute(query)
         stats = from_db_cursor(self._cursor)

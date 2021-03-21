@@ -1,49 +1,16 @@
 """Main application program."""
 
-from UI import *
+from UI_ctrl import UI_ctrl
 from DB_connector import DB_connector
-from User_login_ctrl import User_login_ctrl
-from Make_post_ctrl import Make_post_ctrl
-from Make_reply_ctrl import Make_reply_ctrl
-from Search_post_ctrl import Search_post_ctrl
-from Statistics_ctrl import Statistics_ctrl
 
 if __name__ == "__main__":
-    printWelcome()
 
     # Make connection-object first.
     connection = DB_connector()
-    insertAndPrint(connection)
-    
-    # Usecase 1. A student logs into the system via email and password. 
-    loggedIn = False
-    while not loggedIn:  
-        email, password = loginInput()
-        user = User_login_ctrl(connection, email, password)
-        loggedIn = user.check_credentials() # Check the supplied username and password towards the User-table. 
 
-    inp = None
-    while inp != 'q':
-        printUsecases()
-        inp = input()
-        
-        if inp == '1':
-            folderName, summary, text, tag = featureOne(connection)
-            make_post = Make_post_ctrl(connection, user, folderName)
-            make_post.insert_post(summary, text, tag)
-        elif inp == '2':
-            reply, postID = featureTwo(connection)
-            make_reply = Make_reply_ctrl(connection, user, postID)
-            make_reply.insert_reply(reply)
-        elif inp == '3':
-            pass
-        elif inp == '4':
-            pass
-        elif inp == 'q':
-            pass
-        else:
-            print('There is no matching feature to your input.')
-
+    # Make UI-object.
+    UI = UI_ctrl(connection)
+    UI.main()
 
     # Usecase 2. A student makes a post belonging to the folder "Exam", tagged with "Question". Input is text, "Exam", "Question".
 
