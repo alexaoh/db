@@ -13,6 +13,7 @@ if __name__ == "__main__":
 
     # Make connection-object first.
     connection = DB_connector()
+    insertAndPrint(connection)
     
     # Usecase 1. A student logs into the system via email and password. 
     loggedIn = False
