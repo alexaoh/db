@@ -32,7 +32,9 @@ if __name__ == "__main__":
             make_post = Make_post_ctrl(connection, user, folderName)
             make_post.insert_post(summary, text, tag)
         elif inp == '2':
-            pass
+            reply, postID = featureTwo(connection)
+            make_reply = Make_reply_ctrl(connection, user, postID)
+            make_reply.insert_reply(reply)
         elif inp == '3':
             pass
         elif inp == '4':

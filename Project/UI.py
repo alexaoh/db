@@ -73,6 +73,7 @@ def printUsecases():
 
 def featureOne(connection):
     '''Returns the folder name chosen by the user, the text and the tag.'''
+
     cursor = connection._cnx.cursor(prepared = True)
     getFolderNames = ('SELECT Name FROM Folder')
     cursor.execute(getFolderNames)
@@ -87,7 +88,7 @@ def featureOne(connection):
 
     chosenFolder = False
     while not chosenFolder:
-        inp = input("Write the name of the folder you want to make a post in: ")
+        inp = input("\nWrite the name of the folder you want to make a post in: ")
         if inp not in folders:
             print("No such folder exists.")
         else:
@@ -98,5 +99,32 @@ def featureOne(connection):
     tag = input("Write a tag for your post: ")
     return inp, summary, text, tag
 
+def featureTwo(connection):
+    curs1 = connection._cnx.cursor(prepared = True)
+    curs2 = connection._cnx.cursor(prepared = True)
 
+    getPosts = ('SELECT PostID, Summary FROM Post')
+    curs1.execute(getPosts)
+    ids = []
+    for (postID,sum) in curs1:
+        ids.append(postID)
+    curs1.close()
+
+    curs2.execute(getPosts)
+    print("Available posts to reply to: ")
+    print(from_db_cursor(curs2))
+    curs2.close()
+
+    chosenPost = False
+    postID = None
+    while not chosenPost:
+        postID = input("Write the ID of the post you want to reply to: ")
+        if int(postID) not in ids:
+            print("No post matches the given ID.")
+        else:
+            chosenPost = True
+
+    text = input("Write your reply: ")
+
+    return text, int(postID)
 
