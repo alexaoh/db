@@ -8,7 +8,7 @@ class DB_connector:
     def __init__(self):
         self._config = {
             'user': 'root',
-            'password': 'admin',
+            'password': 'IcloudSk18',
             'host': '127.0.0.1',
             'database': 'DB1Project',
             'raise_on_warnings': True # Usikker på om denne trengs i tillegg til try/except nedenfor. 

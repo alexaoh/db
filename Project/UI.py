@@ -1,5 +1,4 @@
 '''Functions related to the textual UI.'''
-from logging import NullHandler
 from prettytable import from_db_cursor
 
 
@@ -59,4 +58,45 @@ def insertAndPrint(connection):
 
     connection._cnx.commit()
     cursor.close()
+
+def printUsecases():
+    print('Please try one of our extraordinary features:')
+    print('''
+        1. Make a post
+        2. Reply to a post 
+        3. Search for a keyword
+        4. Compile statistics
+        
+        (Type 1 to write a post, 2 to reply etc. type q to quit.)
+    
+    ''')
+
+def featureOne(connection):
+    '''Returns the folder name chosen by the user, the text and the tag.'''
+    cursor = connection._cnx.cursor(prepared = True)
+    getFolderNames = ('SELECT Name FROM Folder')
+    cursor.execute(getFolderNames)
+
+    folders = []
+    print("\nAvailable folders:\n ")
+    for folderName in cursor:
+        print(folderName[0])
+        folders.append(folderName[0])
+
+    cursor.close()
+
+    chosenFolder = False
+    while not chosenFolder:
+        inp = input("Write the name of the folder you want to make a post in: ")
+        if inp not in folders:
+            print("No such folder exists.")
+        else:
+            chosenFolder = True
+    
+    summary = input("Write a summary of your post: ")
+    text = input("Write your text: ")
+    tag = input("Write a tag for your post: ")
+    return inp, summary, text, tag
+
+
 

@@ -22,6 +22,27 @@ if __name__ == "__main__":
         user = User_login_ctrl(connection, email, password)
         loggedIn = user.check_credentials() # Check the supplied username and password towards the User-table. 
 
+    inp = None
+    while inp != 'q':
+        printUsecases()
+        inp = input()
+        
+        if inp == '1':
+            folderName, summary, text, tag = featureOne(connection)
+            make_post = Make_post_ctrl(connection, user, folderName)
+            make_post.insert_post(summary, text, tag)
+        elif inp == '2':
+            pass
+        elif inp == '3':
+            pass
+        elif inp == '4':
+            pass
+        elif inp == 'q':
+            pass
+        else:
+            print('There is no matching feature to your input.')
+
+
     # Usecase 2. A student makes a post belonging to the folder "Exam", tagged with "Question". Input is text, "Exam", "Question".
 
     make_post = Make_post_ctrl(connection, user, "Exam") # Use already logged in user to make post. 
