@@ -14,33 +14,33 @@ class UI_ctrl:
         self.user = None
 
     def main(self):
-        self.printWelcome()
-        self.insertAndPrint()
+        self.print_welcome()
+        self.print_available_users()
 
         # Usecase 1. A student logs into the system via email and password. 
-        loggedIn = False
-        while not loggedIn:  
-            email, password = self.loginInput()
+        logged_in = False
+        while not logged_in:  
+            email, password = self.login_input()
             self.user = User_login_ctrl(self._connection, email, password)
-            loggedIn = self.user.check_credentials() # Check the supplied username and password towards the User-table. 
+            logged_in = self.user.check_credentials() # Check the supplied username and password towards the User-table. 
 
         inp = None
         while inp != 'q':
-            self.printUsecases()
+            self.print_usecases()
             inp = input("Enter the number of the feature you would like to explore: ")
             
             if inp == '1':
-                folderName, summary, text, tag = self.featureOne()
-                make_post = Make_post_ctrl(self._connection, self.user, folderName)
+                folder_name, summary, text, tag = self.feature_one()
+                make_post = Make_post_ctrl(self._connection, self.user, folder_name)
                 make_post.insert_post(summary, text, tag)
 
             elif inp == '2':
-                reply, postID = self.featureTwo()
+                reply, postID = self.feature_two()
                 make_reply = Make_reply_ctrl(self._connection, self.user, postID)
                 make_reply.insert_reply(reply)
 
             elif inp == '3':
-                keyword = self.featureThree()
+                keyword = self.feature_three()
                 search_posts = Search_post_ctrl(self._connection)
                 search_posts.total_search(keyword)
 
@@ -52,7 +52,7 @@ class UI_ctrl:
             else:
                 print("There is no matching feature to your input.")
 
-    def printWelcome(self):
+    def print_welcome(self):
 
         print("""
         █████████████████████████████████████████████████████████████████████████
@@ -69,39 +69,17 @@ class UI_ctrl:
                 ╚═╝░░░░░╚═╝╚═╝░░╚═╝░░░╚═╝░░░░░░╚═╝░░░╚═════╝░╚═╝░░╚═╝""")
 
 
-    def loginInput(self):
+    def login_input(self):
         print("LOGIN")
         email = input("Please enter email: ")
         password = input("Please enter password: ")
 
         return email, password
 
-    def insertAndPrint(self):
-        """Insert some initial data in the db and print available users"""
-        # Should we also insert a course maybe? Maybe the User should choose a course first.
-
-        addUser = ("""INSERT INTO User VALUES
-                    (%s, %s, %s, %s, %s, %s)""")
-        addFolder = ("""INSERT INTO Folder VALUES
-                        (%s, %s, %s)""")
-        
-        userOne = (1, 'Ola', 'Nordmann', 'ola@nordmann.no', 123, 'student')
-        userTwo = (2, 'Kari', 'Nordmann', 'kari@nordmann.no', 'password', 'instructor')
-        folder = (1, 'Exam', None)
-        # Dette user-insert kan heller puttes i txt-filen tenker jeg.
-
-        try:
-            # Sjekk at disse tingene faktisk committes til databasen ;)) (når de utføres sekvensielt slik)
-            # Jeg tror egentlig at commit() (slik som nedenfor) må kalles etter hver execute().
-            # Se artikkel jeg sendte på messenger for dette også (at man kan kjøre en rollback() dersom ikke hele transaksjonen, dvs noen av disse executene ikke er successfull.)
-            self._cursor.execute(addUser, userOne)
-            self._cursor.execute(addUser, userTwo)
-            self._cursor.execute(addFolder, folder)
-        except:
-            # The users are already in the db. 
-            # Her kan man bruke rollback slik jeg snakker om ift artikkelen, nice!
-            # https://pynative.com/python-mysql-transaction-management-using-commit-rollback/
-            pass
+    def print_available_users(self):
+        """Print available users"""
+        # Perhaps the User should choose a course first. Se på dette! 
+        # Course can ev legges inn via exampleData.txt.
         
         getUsers = ("SELECT * FROM User")  
         self._cursor.execute(getUsers) 
@@ -109,9 +87,8 @@ class UI_ctrl:
         print("The following users are available in the database:")
         print(userTable)
 
-        self._connection._cnx.commit() # Sjekk dette ift det jeg kommenterte lenger oppe ;)
-
-    def printUsecases(self):
+    def print_usecases(self):
+        """Print use case menu to choose from in this light version of Piatssa."""
         print("Please try one of our extraordinary features:")
         print("""
             1. Make a post
@@ -123,57 +100,61 @@ class UI_ctrl:
         
         """)
 
-    def featureOne(self):
+    def feature_one(self):
         """Return the folder name chosen by the user, the text and the tag."""        
-        getFolderNames = ("SELECT Name FROM Folder")
-        self._cursor.execute(getFolderNames)
+        get_folder_names = ("SELECT Name FROM Folder")
+        self._cursor.execute(get_folder_names)
 
         folders = []
         print("\nAvailable folders:\n ")
-        for folderName in self._cursor:
-            print(folderName[0])
-            folders.append(folderName[0])
+        for folder_name in self._cursor.fetchall():
+            print(folder_name[0])
+            folders.append(folder_name[0])
 
-        chosenFolder = False
-        while not chosenFolder:
+        chosen_folder = False
+        while not chosen_folder:
             inp = input("\nWrite the name of the folder you want to make a post in: ")
             if inp not in folders:
                 print("No such folder exists.")
             else:
-                chosenFolder = True
+                chosen_folder = True
         
         summary = input("Write a summary of your post: ")
         text = input("Write your text: ")
         tag = input("Write a tag for your post: ")
         return inp, summary, text, tag
 
-    def featureTwo(self):
-        """"Returns the reply-text and post-id of which the user replies to."""
-        getPosts = ("SELECT PostID, Summary FROM Post")
-        self._cursor.execute(getPosts)
+    def feature_two(self):
+        """"Return the reply-text and post-id of which the user replies to."""
+        get_posts = ("SELECT P.PostID, P.Summary, F.Name as Folder FROM Post as P INNER JOIN Folder as F USING (FolderID)")
+        self._cursor.execute(get_posts)
         ids = []
-        for (postID,sum) in self._cursor.fetchall(): # Virker som at dette fungerer! Da kan de to cursorne ovenfor fjernes ;) 
+        for (postID,sum,name) in self._cursor.fetchall():
             ids.append(postID)
 
-        self._cursor.execute(getPosts)
+        self._cursor.execute(get_posts)
         print("\nAvailable posts to reply to: ")
         print(from_db_cursor(self._cursor))
 
-        chosenPost = False
+        chosen_post = False
         postID = None
-        while not chosenPost:
+        while not chosen_post:
             postID = input("Write the ID of the post you want to reply to: ")
-            if int(postID) not in ids:
-                print("No post matches the given ID.")
-            else:
-                chosenPost = True
+            try:
+                postID = int(postID)
+                if postID not in ids:
+                    print("No post matches the given ID.")
+                else:
+                    chosen_post = True
+            except ValueError:
+                print("Please input an integer data type.")
 
         text = input("Write your reply: ")
 
-        return text, int(postID)
+        return text, postID
     
-    def featureThree(self):
-        """Returns the inputted keyword to search for."""
+    def feature_three(self):
+        """Take input and return the keyword to search for."""
         keyword = input("Write your search keyword: ")
         return keyword
 

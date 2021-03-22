@@ -14,7 +14,7 @@ class Statistics_ctrl:
 
     def compile_stats(self):
         """Queries the database for statistics and compiles them."""
-        if self._user_type != 'instructor':
+        if self._user_type != "instructor":
             print("You do not have access to statistics!")
             return 
     
