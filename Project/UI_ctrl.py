@@ -76,6 +76,17 @@ class UI_ctrl:
 
         return email, password
 
+    def text_input(self, query):
+        """Quires user for text input that cannot be empty"""
+        empty = True
+        while empty:
+            text = input(query)
+            if not text or text.isspace():
+                print("You have to write something!")
+            else:
+                empty = False
+        return text
+
     def print_available_users(self):
         """Print available users"""
         # Perhaps the User should choose a course first. Se på dette! 
@@ -119,8 +130,8 @@ class UI_ctrl:
             else:
                 chosen_folder = True
         
-        summary = input("Write a summary of your post: ")
-        text = input("Write your text: ")
+        summary = self.text_input("Write a summary of your post: ")
+        text = self.text_input("Write your text: ")
         tag = input("Write a tag for your post: ")
         return inp, summary, text, tag
 
@@ -149,7 +160,7 @@ class UI_ctrl:
             except ValueError:
                 print("Please input an integer data type.")
 
-        text = input("Write your reply: ")
+        text = self.text_input("Write your reply: ")
 
         return text, postID
     
