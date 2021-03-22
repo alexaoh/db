@@ -1,9 +1,9 @@
 insert into User
-values (4, "Alexander", "Rått", "alex@vektor.no", "123456", "student"), 
-       (5, "Ola", "Nordmann", "ola@nordmann.com", "heisann sveisann", "instructor"), 
-       (1, "Alex", "Johrt", "alex@test.com", "12345", "student"), 
-       (2, "Jim", "Gull", "jimmern@test.com", "123456", "instructor"), 
-       (3, "Molder", "Skog", "molderskog@test.com", "123456", "instructor"), 
+values (1, "Peter", "Pan", "peter@pan.com", "123456", "student"), 
+       (2, "Ola", "Nordmann", "ola@nordmann.com", "heisann sveisann", "instructor"), 
+       (3, "Tiffany", "Johnson", "tiff@john.com", "12345", "student"), 
+       (4, "Mister", "Miyagi", "miyagi@me.you", "I am you and he is me", "instructor"), 
+       (5, "Chris", "Tucker", "rush@hour.com", "I love China", "instructor"), 
        (6, "Kari", "Nordmann", "kari@nordmann.no", "hade på badet", "instructor");
 
 insert into Folder(Name, SuperFolder)
