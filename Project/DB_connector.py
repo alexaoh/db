@@ -10,7 +10,7 @@ class DB_connector:
             'user': 'root',
             'password': 'admin',
             'host': '127.0.0.1',
-            'database': 'DB1Project',
+            'database': 'Piattsa',
             'raise_on_warnings': True # Usikker på om denne trengs i tillegg til try/except nedenfor. 
         }
         self.connect() # Make a connection to the database. 

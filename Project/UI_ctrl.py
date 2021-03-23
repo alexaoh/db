@@ -15,6 +15,7 @@ class UI_ctrl:
         self.course = None
 
     def main(self):
+        """Main method for UI_ctrl, that binds all methods together."""
         self.print_welcome()
         self.print_available_users()
 
@@ -58,7 +59,7 @@ class UI_ctrl:
                 print("There is no matching feature to your input.")
 
     def print_welcome(self):
-
+        """Print welcome graphics."""
         print("""
         █████████████████████████████████████████████████████████████████████████
         █▄─█▀▀▀█─▄█▄─▄▄─█▄─▄███─▄▄▄─█─▄▄─█▄─▀█▀─▄█▄─▄▄─███─▄─▄─█─▄▄─█████████████
@@ -77,6 +78,7 @@ class UI_ctrl:
 
 
     def login_input(self):
+        """Take input for login."""
         print("LOGIN")
         email = input("Please enter email: ")
         password = input("Please enter password: ")
@@ -84,7 +86,7 @@ class UI_ctrl:
         return email, password
     
     def select_course(self, user):
-
+        """Find available courses and set the wanted course as chosen."""
         get_courses = ("""SELECT CourseID 
                           FROM Course NATURAL JOIN UserInCourse
                           WHERE UserID = %s
@@ -111,7 +113,7 @@ class UI_ctrl:
 
 
     def text_input(self, query):
-        """Quires user for text input that cannot be empty"""
+        """Querie user for text input that cannot be empty."""
         empty = True
         while empty:
             text = input(query)
@@ -122,7 +124,7 @@ class UI_ctrl:
         return text
 
     def print_available_users(self):
-        """Print available users"""
+        """Print available users."""
         # Perhaps the User should choose a course first. Se på dette! 
         # Course can ev legges inn via exampleData.txt.
         
