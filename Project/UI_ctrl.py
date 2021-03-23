@@ -12,6 +12,7 @@ class UI_ctrl:
         self._connection = connection
         self._cursor = self._connection._cnx.cursor(prepared = True)
         self.user = None
+        self.course = None
 
     def main(self):
         self.print_welcome()
@@ -24,6 +25,10 @@ class UI_ctrl:
             self.user = User_login_ctrl(self._connection, email, password)
             logged_in = self.user.check_credentials() # Check the supplied username and password towards the User-table. 
 
+        # Course selection
+        self.select_course(self.user)
+
+        # Main menu
         inp = None
         while inp != 'q':
             self.print_usecases()
@@ -66,7 +71,9 @@ class UI_ctrl:
                 ██████╔╝██║███████║░░░██║░░░░░░██║░░░╚█████╗░███████║
                 ██╔═══╝░██║██╔══██║░░░██║░░░░░░██║░░░░╚═══██╗██╔══██║
                 ██║░░░░░██║██║░░██║░░░██║░░░░░░██║░░░██████╔╝██║░░██║
-                ╚═╝░░░░░╚═╝╚═╝░░╚═╝░░░╚═╝░░░░░░╚═╝░░░╚═════╝░╚═╝░░╚═╝""")
+                ╚═╝░░░░░╚═╝╚═╝░░╚═╝░░░╚═╝░░░░░░╚═╝░░░╚═════╝░╚═╝░░╚═╝
+                
+                """)
 
 
     def login_input(self):
@@ -75,6 +82,33 @@ class UI_ctrl:
         password = input("Please enter password: ")
 
         return email, password
+    
+    def select_course(self, user):
+
+        get_courses = ("""SELECT CourseID 
+                          FROM Course NATURAL JOIN UserInCourse
+                          WHERE UserID = %s
+                        """)
+        self._cursor.execute(get_courses, (user.get_user_id(),))
+
+        courses = []
+        print("\nCourses you have access to:\n ")
+        for course in self._cursor.fetchall():
+            print(course[0])
+            courses.append(course[0])
+        
+        chosen_course = False
+        cid = None
+        while not chosen_course:
+            cid = input("\nWrite course code of the course you want to access: ")
+            if cid not in courses:
+                print("No such course exists.")
+            else:
+                chosen_course = True
+
+        self.course = cid
+
+
 
     def text_input(self, query):
         """Quires user for text input that cannot be empty"""
@@ -100,7 +134,7 @@ class UI_ctrl:
 
     def print_usecases(self):
         """Print use case menu to choose from in this light version of Piatssa."""
-        print("Please try one of our extraordinary features:")
+        print("\nWelcome to the Piattsa forum for " + self.course + ". Please try one of our extraordinary features:")
         print("""
             1. Make a post
             2. Reply to a post 
@@ -113,11 +147,11 @@ class UI_ctrl:
 
     def feature_one(self):
         """Return the folder name chosen by the user, the text and the tag."""        
-        get_folder_names = ("SELECT Name FROM Folder")
-        self._cursor.execute(get_folder_names)
+        get_folder_names = ("SELECT Name FROM Folder NATURAL JOIN FolderInCourse WHERE CourseID = %s")
+        self._cursor.execute(get_folder_names, (self.course, ))
 
         folders = []
-        print("\nAvailable folders:\n ")
+        print("\nAvailable folders in " + self.course + ": \n ")
         for folder_name in self._cursor.fetchall():
             print(folder_name[0])
             folders.append(folder_name[0])
