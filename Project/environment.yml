@@ -1,0 +1,7 @@
+name: python_mysql
+channels:
+  - defaults
+dependencies:
+  - python=3.6
+  - mysql-connector-python
+  - prettytable
