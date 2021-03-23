@@ -14,19 +14,36 @@ class Statistics_ctrl:
 
     def compile_stats(self):
         """Queries the database for statistics and compiles them."""
-        if self._user_type != 'instructor':
-            raise Exception("You do not have access to statistics!")
+        if self._user_type != "instructor":
+            print("You do not have access to statistics!")
+            return 
     
-        query = ( "SELECT UserID, readPosts AS 'Posts read', writtenPosts AS 'Posts written' "
-                    "FROM (SELECT UserID, COUNT(PostID) AS readPosts "
-                    "FROM ViewedBy RIGHT OUTER JOIN User USING (UserID) "
-                    "GROUP BY UserID "
-                    "ORDER BY readPosts DESC) dt1 "
-                "INNER JOIN "
-                    "(SELECT u.UserID, COUNT(p.UserID) AS writtenPosts "
-                    "FROM Post AS p RIGHT OUTER JOIN User AS u ON p.UserID = u.UserID "
-                    "GROUP BY u.UserID) dt2 USING (UserID) "
-                "ORDER BY readPosts DESC, writtenPosts DESC")
+        query = ( """
+                    SELECT 
+                        CONCAT(Fname, ' ', Sname) AS Name,
+                        Email,
+                        stats.readPosts AS 'Posts read',
+                        stats.writtenPosts AS 'Posts written'
+                    FROM
+                        User
+                            INNER JOIN
+                        (SELECT 
+                            UserID, readPosts, writtenPosts
+                        FROM
+                            (SELECT 
+                            UserID, COUNT(PostID) AS readPosts
+                        FROM
+                            ViewedBy
+                        RIGHT OUTER JOIN User USING (UserID)
+                        GROUP BY UserID) dt1
+                        INNER JOIN (SELECT 
+                            u.UserID, COUNT(p.UserID) AS writtenPosts
+                        FROM
+                            Post AS p
+                        RIGHT OUTER JOIN User AS u ON p.UserID = u.UserID
+                        GROUP BY u.UserID) dt2 USING (UserID)) stats USING (UserID)
+                    ORDER BY stats.readPosts DESC;
+                    """)
         
         self._cursor.execute(query)
         stats = from_db_cursor(self._cursor)

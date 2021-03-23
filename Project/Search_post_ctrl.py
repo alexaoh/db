@@ -3,9 +3,8 @@
 class Search_post_ctrl:
     """Control searching for posts (with specific keywords mentioned)."""
 
-    def __init__(self, connection, user):
+    def __init__(self, connection):
         self._connection = connection
-        self._user = user 
 
         # Make cursor for each object. 
         self._cursor = self._connection._cnx.cursor(prepared = True)
