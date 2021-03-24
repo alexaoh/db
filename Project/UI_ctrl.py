@@ -37,7 +37,7 @@ class UI_ctrl:
             
             if inp == '1':
                 folder_name, summary, text, tag = self.feature_one()
-                make_post = Make_post_ctrl(self._connection, self.user, folder_name)
+                make_post = Make_post_ctrl(self._connection, self.user, folder_name, self.course)
                 make_post.insert_post(summary, text, tag)
 
             elif inp == '2':
