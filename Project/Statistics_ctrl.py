@@ -13,7 +13,7 @@ class Statistics_ctrl:
         self._cursor = self._connection._cnx.cursor(prepared = True)
 
     def compile_stats(self):
-        """Queries the database for statistics and compiles them."""
+        """Query the database for statistics and compile them."""
         if self._user_type != "instructor":
             print("You do not have access to statistics!")
             return 

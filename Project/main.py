@@ -5,7 +5,7 @@ from DB_connector import DB_connector
 
 if __name__ == "__main__":
 
-    # Make connection-object first.
+    # Make connection-object.
     connection = DB_connector()
 
     # Make UI-object.

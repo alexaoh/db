@@ -11,8 +11,6 @@ class User_login_ctrl:
         # Make cursor for each object. 
         self._cursor = self._connection._cnx.cursor(prepared = True)
 
-        #self.check_credentials()
-
     def check_credentials(self):
         """Checks if given password matches the password of the tuple with the given email in db."""
         select_query = "SELECT UserPassword FROM User WHERE Email = %s"

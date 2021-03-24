@@ -26,10 +26,10 @@ class UI_ctrl:
             self.user = User_login_ctrl(self._connection, email, password)
             logged_in = self.user.check_credentials() # Check the supplied username and password towards the User-table. 
 
-        # Course selection
+        # Course selection.
         self.select_course(self.user)
 
-        # Main menu
+        # Main menu.
         inp = None
         while inp != 'q':
             self.print_usecases()
@@ -113,7 +113,7 @@ class UI_ctrl:
 
 
     def text_input(self, query):
-        """Querie user for text input that cannot be empty."""
+        """Query user for text input that cannot be empty."""
         empty = True
         while empty:
             text = input(query)
@@ -124,10 +124,7 @@ class UI_ctrl:
         return text
 
     def print_available_users(self):
-        """Print available users."""
-        # Perhaps the User should choose a course first. Se på dette! 
-        # Course can ev legges inn via exampleData.txt.
-        
+        """Print available users."""        
         getUsers = ("SELECT * FROM User")  
         self._cursor.execute(getUsers) 
         userTable = from_db_cursor(self._cursor)

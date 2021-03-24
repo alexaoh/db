@@ -7,18 +7,18 @@ class DB_connector:
 
     def __init__(self):
         self._config = {
-            'user': 'root',
-            'password': 'admin',
-            'host': '127.0.0.1',
+            # Match 'user' with your username and 'password' with your password. 
+            'user': '',
+            'password': '',
             'database': 'Piattsa',
-            'raise_on_warnings': True # Usikker på om denne trengs i tillegg til try/except nedenfor. 
+            'host': '127.0.0.1',
+            'raise_on_warnings': True 
         }
         self.connect() # Make a connection to the database. 
 
     def connect(self):
         """Connect to database, with credentials given in config."""
-
-        # Open connection with error-catching. Sjekk gjennom hvordan dette fungerer til slutt. 
+        
         try:
             self._cnx = mysql.connector.connect(**self._config)
         except mysql.connector.Error as err:
